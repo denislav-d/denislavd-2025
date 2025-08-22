@@ -1,14 +1,25 @@
 @import "tailwindcss";
 
+::selection {
+  background-color: var(--color-secondary);
+  color: var(--color-dark);
+}
+
 @theme {
   --font-plus-jakarta-sans: var(--font-plus-jakarta-sans);
 
   --color-light: #f7f7f2;
   --color-dark: #141414;
   --color-secondary: #afaba0;
+
+  --ease-in-out: cubic-bezier(0.87, 0, 0.13, 1);
 }
 
-::selection {
-  background-color: var(--color-secondary);
-  color: var(--color-dark);
+/* Disable transitions on page load to prevent glitched animations */
+.preload * {
+  transition: none !important;
+}
+
+.grid-area {
+  grid-area: 1/1;
 }
