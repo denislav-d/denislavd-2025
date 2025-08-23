@@ -19,15 +19,17 @@ export default function TopNavigation() {
   // ! TODO: fix slider/all links, transform-none?
 
   return (
-    <nav className="font-plus-jakarta-sans fixed top-4 z-50 grid w-full grid-cols-2 px-4 text-xs font-semibold tracking-[-0.01em] text-white mix-blend-difference md:grid-cols-3">
-      <Link href="/">Denislav Dimitrov</Link>
+    <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
+      <Link href="/">
+        Denislav <span className="xs:inline-block hidden">Dimitrov</span>
+      </Link>
 
       <div className="flex justify-end gap-x-4 md:justify-center">
         <Link
           href="/thoughts"
           className={cn(
             "inline-block transition-transform duration-600 ease-in-out",
-            pathname === "/projects" ? "translate-x-0" : "translate-x-2",
+            pathname === "/" ? "translate-x-0" : "translate-x-2",
           )}
         >
           Thoughts
@@ -37,10 +39,10 @@ export default function TopNavigation() {
           {/* Projects Link */}
           <div className="grid-area origin-[50%_50%_0]">
             <Link
-              href={pathname === "/projects" ? "/" : "/projects"}
+              href={pathname === "/" ? "/" : "/"}
               className={cn(
                 "inline-block w-full text-center transition-all duration-600 ease-in-out",
-                pathname === "/projects"
+                pathname === "/"
                   ? "pointer-events-none translate-y-full scale-95"
                   : "translate-y-0 scale-100",
               )}
@@ -50,46 +52,41 @@ export default function TopNavigation() {
           </div>
 
           <div className="grid-area origin-[50%_50%_0]">
-            <Link
-              href={pathname === "/projects" ? "/" : "/projects"}
+            <span
               className={cn(
                 "inline-block w-full transition-all duration-600 ease-in-out",
-                pathname === "/projects"
+                pathname === "/"
                   ? "translate-y-0 scale-100"
                   : "pointer-events-none -translate-y-full scale-95",
               )}
             >
-              <span
+              <Link
+                href={pathname === "/" ? "" : "/"}
                 className={cn(
                   "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/projects"
-                    ? "translate-x-1 scale-95"
-                    : "scale-100",
+                  pathname !== "/" ? "translate-x-1 scale-95" : "scale-100",
                 )}
               >
                 Slider
-              </span>{" "}
+              </Link>{" "}
               <span
                 className={cn(
                   "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/projects"
-                    ? "-translate-x-0.5 scale-95"
-                    : "scale-100",
+                  pathname !== "/" ? "-translate-x-0.5 scale-95" : "scale-100",
                 )}
               >
                 /
               </span>{" "}
-              <span
+              <Link
+                href="/projects"
                 className={cn(
                   "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/projects"
-                    ? "-translate-x-1 scale-95"
-                    : "scale-100",
+                  pathname !== "/" ? "-translate-x-1 scale-95" : "scale-100",
                 )}
               >
                 Grid
-              </span>
-            </Link>
+              </Link>
+            </span>
           </div>
         </div>
 
@@ -97,7 +94,7 @@ export default function TopNavigation() {
           href="/about"
           className={cn(
             "inline-block transition-transform duration-600 ease-in-out",
-            pathname === "/projects" ? "translate-x-0" : "-translate-x-2",
+            pathname === "/" ? "translate-x-0" : "-translate-x-2",
           )}
         >
           About
