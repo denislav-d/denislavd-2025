@@ -1,3 +1,699 @@
-export default function Home() {
-  return <h1>denislavd</h1>;
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import {
+  Scene,
+  PerspectiveCamera,
+  WebGLRenderer,
+  TextureLoader,
+  LinearFilter,
+  DoubleSide,
+  PlaneGeometry,
+  Mesh,
+  ShaderMaterial,
+} from "three";
+import { vertexShader, fragmentShader } from "@/utils/shaders";
+import Minimap from "@/components/Minimap";
+import Link from "next/link";
+import { slides } from "@/data/slides";
+
+// ! TODO: fix links if early click
+
+export default function Slider() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const projectTitleRef = useRef<HTMLHeadingElement>(null);
+  const projectLinkRef = useRef<HTMLAnchorElement>(null);
+  const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
+  const [realTimePosition, setRealTimePosition] = useState(0);
+  const lastRealTimePositionRef = useRef(0);
+  const navigationFunctionRef = useRef<((index: number) => void) | null>(null);
+  const [planeDimensions, setPlaneDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const [touchMoved, setTouchMoved] = useState(false);
+  const sceneRef = useRef<{
+    scene?: Scene;
+    camera?: PerspectiveCamera;
+    renderer?: WebGLRenderer;
+    animationId?: number;
+    cleanup?: () => void;
+  }>({});
+
+  useEffect(() => {
+    if (
+      !containerRef.current ||
+      !projectTitleRef.current ||
+      !projectLinkRef.current
+    )
+      return;
+
+    const container = containerRef.current;
+    const projectTitle = projectTitleRef.current;
+    const projectLink = projectLinkRef.current;
+
+    // Initialize project title and link
+    projectTitle.textContent = slides[0].title;
+    projectLink.href = slides[0].url;
+
+    // WebGL state variables
+    let scrollIntensity = 0;
+    let targetScrollIntensity = 0;
+    const maxScrollIntensity = 1.0;
+    const scrollSmoothness = 0.5;
+
+    let scrollPosition = 0;
+    let targetScrollPosition = 0;
+    const scrollPositionSmoothness = 0.06;
+
+    let isMoving = false;
+    const movementThreshold = 0.005;
+    let isSnapping = false;
+    let lastInteractionTime = 0;
+
+    let stableCurrentIndex = 0;
+    let stableNextIndex = 1;
+    let isStable = false;
+
+    let titleHidden = false;
+    let titleAnimating = false;
+    let currentProjectIndex = 0;
+
+    const scene = new Scene();
+    const camera = new PerspectiveCamera(
+      75,
+      window.innerWidth / window.innerHeight,
+      0.1,
+      1000,
+    );
+    camera.position.z = 5;
+
+    const renderer = new WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    container.appendChild(renderer.domElement);
+
+    // Store in ref for cleanup
+    sceneRef.current = { scene, camera, renderer };
+
+    const calculatePlaneDimensions = () => {
+      const fov = camera.fov * (Math.PI / 180);
+      const viewportHeight = 1.5 * Math.tan(fov / 2) * camera.position.z;
+      const viewportWidth = viewportHeight * camera.aspect;
+
+      // Responsive scaling
+      let widthFactor;
+      if (window.innerWidth < 600) {
+        widthFactor = 1;
+      } else if (window.innerWidth < 768) {
+        widthFactor = 0.7;
+      } else if (window.innerWidth < 1024) {
+        widthFactor = 0.6;
+      } else {
+        widthFactor = 0.5;
+      }
+
+      const planeWidth = viewportWidth * widthFactor;
+      const planeHeight = planeWidth * (330 / 230);
+
+      // Convert 3D world coordinates to screen pixels
+      // Use correct viewport calculation for accurate coordinate conversion
+      const correctViewportHeight = 2 * Math.tan(fov / 2) * camera.position.z;
+      const correctViewportWidth = correctViewportHeight * camera.aspect;
+      const screenWidth =
+        (planeWidth / correctViewportWidth) * window.innerWidth;
+      const screenHeight =
+        (planeHeight / correctViewportHeight) * window.innerHeight;
+
+      // Update state for CSS positioning
+      setPlaneDimensions({ width: screenWidth, height: screenHeight });
+
+      return {
+        width: planeWidth,
+        height: planeHeight,
+        screenWidth,
+        screenHeight,
+      };
+    };
+
+    const dimensions = calculatePlaneDimensions();
+
+    const loadTextures = () => {
+      const textureLoader = new TextureLoader();
+
+      return slides.map((slide) => {
+        const texture = textureLoader.load(
+          slide.image,
+          undefined,
+          undefined,
+          () => {
+            console.log("using fallback for", slide.image);
+          },
+        );
+
+        texture.minFilter = LinearFilter;
+        texture.magFilter = LinearFilter;
+        return texture;
+      });
+    };
+
+    const textures = loadTextures();
+
+    function preloadAllTextures() {
+      textures.forEach((texture) => {
+        texture.needsUpdate = true;
+      });
+    }
+
+    preloadAllTextures();
+
+    const geometry = new PlaneGeometry(
+      dimensions.width,
+      dimensions.height,
+      32,
+      32,
+    );
+
+    const material = new ShaderMaterial({
+      vertexShader,
+      fragmentShader,
+      side: DoubleSide,
+      uniforms: {
+        uScrollIntensity: { value: scrollIntensity },
+        uScrollPosition: { value: scrollPosition },
+        uCurrentTexture: { value: textures[0] },
+        uNextTexture: { value: textures[1] },
+      },
+    });
+
+    const plane = new Mesh(geometry, material);
+    scene.add(plane);
+
+    function determineTextureIndices(position: number) {
+      const totalImages = slides.length;
+
+      // Clamp position to valid range
+      const clampedPosition = Math.max(0, Math.min(totalImages - 1, position));
+
+      const baseIndex = Math.floor(clampedPosition);
+      const nextIndex = Math.min(baseIndex + 1, totalImages - 1);
+
+      // Calculate normalized position within current slide transition
+      const normalizedPosition = clampedPosition - baseIndex;
+
+      return {
+        currentIndex: baseIndex,
+        nextIndex: nextIndex,
+        normalizedPosition: normalizedPosition,
+      };
+    }
+
+    function updateTextureIndices() {
+      if (isStable) {
+        material.uniforms.uCurrentTexture.value = textures[stableCurrentIndex];
+        material.uniforms.uNextTexture.value = textures[stableNextIndex];
+        return;
+      }
+
+      const indices = determineTextureIndices(scrollPosition);
+
+      material.uniforms.uCurrentTexture.value = textures[indices.currentIndex];
+      material.uniforms.uNextTexture.value = textures[indices.nextIndex];
+    }
+
+    function snapToNearestImage() {
+      const now = Date.now();
+      // Prevent rapid snap calls and ensure minimum time between snaps
+      if (!isSnapping && now - lastInteractionTime > 100) {
+        isSnapping = true;
+        const roundedPosition = Math.max(
+          0,
+          Math.min(slides.length - 1, Math.round(scrollPosition)),
+        );
+        targetScrollPosition = roundedPosition;
+
+        const indices = determineTextureIndices(roundedPosition);
+        stableCurrentIndex = indices.currentIndex;
+        stableNextIndex = indices.nextIndex;
+
+        currentProjectIndex = indices.currentIndex;
+        setCurrentSlideIndex(indices.currentIndex);
+
+        showTitle();
+      }
+    }
+
+    function navigateToSlide(targetIndex: number) {
+      if (targetIndex >= 0 && targetIndex < slides.length) {
+        lastInteractionTime = Date.now(); // Track interaction time
+
+        // Calculate direction and distance for scroll intensity effect
+        const currentPos = scrollPosition;
+        const distance = targetIndex - currentPos;
+        const direction = distance > 0 ? 1 : -1;
+
+        // Add scroll intensity based on distance (more distance = more intensity)
+        const intensityMultiplier = Math.min(Math.abs(distance) * 0.3, 0.8);
+        targetScrollIntensity += direction * intensityMultiplier;
+
+        // Clamp intensity to maximum values
+        targetScrollIntensity = Math.max(
+          -maxScrollIntensity,
+          Math.min(maxScrollIntensity, targetScrollIntensity),
+        );
+
+        targetScrollPosition = targetIndex;
+        isSnapping = false;
+        isStable = false;
+        isMoving = true;
+        hideTitle();
+      }
+    }
+
+    // Store navigation function in ref for external access
+    navigationFunctionRef.current = navigateToSlide;
+
+    function hideTitle() {
+      if (!titleHidden && !titleAnimating) {
+        titleAnimating = true;
+        projectTitle.style.transform = "translateY(20px)";
+        projectTitle.style.opacity = "0";
+
+        setTimeout(() => {
+          titleAnimating = false;
+          titleHidden = true;
+        }, 500);
+      }
+    }
+
+    function showTitle() {
+      if (titleHidden && !titleAnimating) {
+        projectTitle.textContent = slides[currentProjectIndex].title;
+        projectLink.href = slides[currentProjectIndex].url;
+
+        titleAnimating = true;
+        projectTitle.style.transform = "translateY(0px)";
+        projectTitle.style.opacity = "1";
+
+        setTimeout(() => {
+          titleAnimating = false;
+          titleHidden = false;
+        }, 500);
+      }
+    }
+
+    const handleResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      const newDimensions = calculatePlaneDimensions();
+      plane.geometry.dispose();
+      plane.geometry = new PlaneGeometry(
+        newDimensions.width,
+        newDimensions.height,
+        32,
+        32,
+      );
+    };
+
+    // Touch and mouse handling for mobile and desktop
+    let touchStartY = 0;
+    let touchStartX = 0;
+    let touchStartTime = 0;
+    let lastTouchY = 0;
+    let isTouching = false;
+    let isDragging = false;
+
+    // Mouse handling for desktop
+    let mouseStartY = 0;
+    let mouseStartX = 0;
+    let mouseStartTime = 0;
+    let lastMouseY = 0;
+    let isMouseDown = false;
+    let isMouseDragging = false;
+
+    const handleTouchStart = (event: TouchEvent) => {
+      const touch = event.touches[0];
+      touchStartY = touch.clientY;
+      touchStartX = touch.clientX;
+      lastTouchY = touch.clientY;
+      touchStartTime = Date.now();
+      lastInteractionTime = touchStartTime; // Track interaction
+      isTouching = true;
+      isDragging = false;
+      setTouchMoved(false);
+
+      // Reset states for smooth interaction
+      isSnapping = false;
+      isStable = false;
+      isMoving = true;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (!isTouching) return;
+
+      const touch = event.touches[0];
+      const deltaY = touch.clientY - lastTouchY;
+      const totalDeltaY = Math.abs(touch.clientY - touchStartY);
+      const totalDeltaX = Math.abs(touch.clientX - touchStartX);
+
+      // Determine if this is a drag gesture (movement > 10px)
+      if (totalDeltaY > 10 || totalDeltaX > 10) {
+        setTouchMoved(true);
+        isDragging = true;
+        event.preventDefault();
+        hideTitle();
+      }
+
+      // Only process slider movement if we're dragging
+      if (isDragging) {
+        lastTouchY = touch.clientY;
+
+        // Convert touch movement to scroll values
+        const touchSensitivity = 0.005;
+        targetScrollIntensity += -deltaY * touchSensitivity;
+        targetScrollIntensity = Math.max(
+          -maxScrollIntensity,
+          Math.min(maxScrollIntensity, targetScrollIntensity),
+        );
+
+        targetScrollPosition += -deltaY * touchSensitivity;
+        // Clamp scroll position to carousel boundaries
+        targetScrollPosition = Math.max(
+          0,
+          Math.min(slides.length - 1, targetScrollPosition),
+        );
+        isMoving = true;
+
+        // Ensure responsive updates during dragging
+        isStable = false;
+      }
+    };
+
+    const handleTouchEnd = () => {
+      isTouching = false;
+      isDragging = false;
+
+      // Ensure animation continues after touch ends on mobile
+      if (!sceneRef.current.animationId) {
+        animate();
+      }
+
+      // Reset touchMoved after a brief delay to allow click events to process
+      setTimeout(() => {
+        setTouchMoved(false);
+      }, 50);
+    };
+
+    // Mouse handlers for desktop drag functionality
+    const handleMouseDown = (event: MouseEvent) => {
+      mouseStartY = event.clientY;
+      mouseStartX = event.clientX;
+      lastMouseY = event.clientY;
+      mouseStartTime = Date.now();
+      lastInteractionTime = mouseStartTime; // Track interaction
+      isMouseDown = true;
+      isMouseDragging = false;
+      setTouchMoved(false);
+
+      // Reset states for smooth interaction
+      isSnapping = false;
+      isStable = false;
+      isMoving = true;
+    };
+
+    const handleMouseMove = (event: MouseEvent) => {
+      if (!isMouseDown) return;
+
+      const deltaY = event.clientY - lastMouseY;
+      const totalDeltaY = Math.abs(event.clientY - mouseStartY);
+      const totalDeltaX = Math.abs(event.clientX - mouseStartX);
+
+      // Determine if this is a drag gesture (movement > 10px)
+      if (totalDeltaY > 10 || totalDeltaX > 10) {
+        setTouchMoved(true);
+        isMouseDragging = true;
+        event.preventDefault();
+        hideTitle();
+      }
+
+      // Only process slider movement if we're dragging
+      if (isMouseDragging) {
+        lastMouseY = event.clientY;
+
+        // Convert mouse movement to scroll values (same sensitivity as touch)
+        const mouseSensitivity = 0.005;
+        targetScrollIntensity += -deltaY * mouseSensitivity;
+        targetScrollIntensity = Math.max(
+          -maxScrollIntensity,
+          Math.min(maxScrollIntensity, targetScrollIntensity),
+        );
+
+        targetScrollPosition += -deltaY * mouseSensitivity;
+        // Clamp scroll position to carousel boundaries
+        targetScrollPosition = Math.max(
+          0,
+          Math.min(slides.length - 1, targetScrollPosition),
+        );
+        isMoving = true;
+
+        isStable = false;
+      }
+    };
+
+    const handleMouseUp = () => {
+      isMouseDown = false;
+      isMouseDragging = false;
+
+      // Ensure animation continues after mouse ends
+      if (!sceneRef.current.animationId) {
+        animate();
+      }
+
+      // Reset touchMoved after a brief delay to allow click events to process
+      setTimeout(() => {
+        setTouchMoved(false);
+      }, 50);
+    };
+
+    const handleWheel = (event: WheelEvent) => {
+      event.preventDefault();
+
+      isSnapping = false;
+      isStable = false;
+
+      hideTitle();
+
+      targetScrollIntensity += event.deltaY * 0.001;
+      targetScrollIntensity = Math.max(
+        -maxScrollIntensity,
+        Math.min(maxScrollIntensity, targetScrollIntensity),
+      );
+
+      targetScrollPosition += event.deltaY * 0.001;
+      // Clamp scroll position to carousel boundaries
+      targetScrollPosition = Math.max(
+        0,
+        Math.min(slides.length - 1, targetScrollPosition),
+      );
+
+      isMoving = true;
+    };
+
+    function animate() {
+      scrollIntensity +=
+        (targetScrollIntensity - scrollIntensity) * scrollSmoothness;
+      material.uniforms.uScrollIntensity.value = scrollIntensity;
+
+      scrollPosition +=
+        (targetScrollPosition - scrollPosition) * scrollPositionSmoothness;
+
+      // Clamp scroll position to carousel boundaries
+      scrollPosition = Math.max(0, Math.min(slides.length - 1, scrollPosition));
+
+      // Update real-time position for minimap
+      const clampedScrollPosition = scrollPosition;
+
+      // Only update state if position changed significantly (optimization)
+      if (
+        Math.abs(clampedScrollPosition - lastRealTimePositionRef.current) > 0.01
+      ) {
+        setRealTimePosition(clampedScrollPosition);
+        lastRealTimePositionRef.current = clampedScrollPosition;
+      }
+
+      // Calculate normalized position for shader (position within current slide transition)
+      const indices = determineTextureIndices(scrollPosition);
+
+      if (isStable) {
+        material.uniforms.uScrollPosition.value = 0;
+      } else {
+        material.uniforms.uScrollPosition.value = indices.normalizedPosition;
+      }
+
+      // Always update texture indices during movement, ignore stable state during touch/mouse interactions
+      if (
+        isTouching ||
+        isDragging ||
+        isMouseDown ||
+        isMouseDragging ||
+        isMoving
+      ) {
+        // Force real-time texture updates during touch/mouse interactions
+        material.uniforms.uCurrentTexture.value =
+          textures[indices.currentIndex];
+        material.uniforms.uNextTexture.value = textures[indices.nextIndex];
+      } else {
+        updateTextureIndices();
+      }
+
+      const baseScale = 1.0;
+      const scaleIntensity = 0.1;
+
+      if (scrollIntensity > 0) {
+        const scale = baseScale + scrollIntensity * scaleIntensity;
+        plane.scale.set(scale, scale, 1);
+      } else {
+        const scale = baseScale - Math.abs(scrollIntensity) * scaleIntensity;
+        plane.scale.set(scale, scale, 1);
+      }
+
+      targetScrollIntensity *= 0.98;
+
+      const scrollDelta = Math.abs(targetScrollPosition - scrollPosition);
+
+      if (scrollDelta < movementThreshold) {
+        if (isMoving && !isSnapping) {
+          snapToNearestImage();
+        }
+
+        if (scrollDelta < 0.001) {
+          if (!isStable) {
+            isStable = true;
+            scrollPosition = Math.round(scrollPosition);
+            targetScrollPosition = scrollPosition;
+          }
+
+          isMoving = false;
+          isSnapping = false;
+        }
+      }
+
+      // Force render even when not moving to ensure mobile browsers stay responsive
+      renderer.render(scene, camera);
+      sceneRef.current.animationId = requestAnimationFrame(animate);
+    }
+
+    // Start animation
+    animate();
+
+    // Add event listeners
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("wheel", handleWheel, { passive: false });
+
+    // Touch events for mobile - attach to document to capture events even when starting on link overlay
+    document.addEventListener("touchstart", handleTouchStart, {
+      passive: false,
+    });
+    document.addEventListener("touchmove", handleTouchMove, {
+      passive: false,
+    });
+    document.addEventListener("touchend", handleTouchEnd);
+
+    // Mouse events for desktop - attach to document to capture events even when starting on link overlay
+    document.addEventListener("mousedown", handleMouseDown, {
+      passive: false,
+    });
+    document.addEventListener("mousemove", handleMouseMove, {
+      passive: false,
+    });
+    document.addEventListener("mouseup", handleMouseUp);
+
+    // Cleanup function
+    sceneRef.current.cleanup = () => {
+      if (sceneRef.current.animationId) {
+        cancelAnimationFrame(sceneRef.current.animationId);
+      }
+
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("wheel", handleWheel);
+
+      // Remove touch event listeners
+      document.removeEventListener("touchstart", handleTouchStart);
+      document.removeEventListener("touchmove", handleTouchMove);
+      document.removeEventListener("touchend", handleTouchEnd);
+
+      // Remove mouse event listeners
+      document.removeEventListener("mousedown", handleMouseDown);
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+
+      // Dispose Three.js resources
+      geometry.dispose();
+      material.dispose();
+      textures.forEach((texture) => texture.dispose());
+      renderer.dispose();
+
+      // Remove canvas from DOM
+      if (container.contains(renderer.domElement)) {
+        container.removeChild(renderer.domElement);
+      }
+    };
+
+    return sceneRef.current.cleanup;
+  }, []);
+
+  const handleNavigateToSlide = (index: number) => {
+    if (navigationFunctionRef.current) {
+      navigationFunctionRef.current(index);
+    }
+  };
+
+  return (
+    <div className="slider-page relative grid max-h-dvh w-screen overflow-hidden">
+      <section className="grid-area relative flex w-full items-center justify-center">
+        <div id="container" ref={containerRef} className="relative size-full" />
+
+        <Minimap
+          activeIndex={currentSlideIndex}
+          realTimePosition={realTimePosition}
+          totalSlides={slides.length}
+          onNavigate={handleNavigateToSlide}
+          className="absolute top-1/2 right-4 -translate-y-1/2"
+        />
+      </section>
+
+      <section className="grid-area flex flex-col items-center justify-center text-center">
+        <h2
+          id="project-title"
+          ref={projectTitleRef}
+          className="relative text-sm font-semibold tracking-[-0.01em] text-white bg-blend-difference backdrop-blur-sm transition-all duration-500 ease-in-out"
+        >
+          Loading...
+        </h2>
+        <Link
+          id="project-link"
+          ref={projectLinkRef}
+          href="/about"
+          draggable={false}
+          className="pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center select-none [user-drag:none]"
+          style={{
+            width: `${planeDimensions.width}px`,
+            height: `${planeDimensions.height}px`,
+          }}
+          onClick={(e) => {
+            // Prevent navigation if user was dragging
+            if (touchMoved) {
+              e.preventDefault();
+              return false;
+            }
+          }}
+        ></Link>
+      </section>
+    </div>
+  );
 }
