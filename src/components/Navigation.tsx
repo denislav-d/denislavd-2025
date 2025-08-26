@@ -20,7 +20,7 @@ export default function TopNavigation() {
 
   return (
     <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
-      <Link href="/">
+      <Link href="/" className="w-fit">
         Denislav <span className="xs:inline-block hidden">Dimitrov</span>
       </Link>
 
