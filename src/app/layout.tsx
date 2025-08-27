@@ -20,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${plusJakartaSans.variable} bg-dark text-light preload antialiased`}
+        className={`${plusJakartaSans.variable} bg-light text-dark preload antialiased`}
       >
         <Navigation />
         {children}

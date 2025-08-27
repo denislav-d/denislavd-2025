@@ -16,12 +16,19 @@ import { vertexShader, fragmentShader } from "@/utils/shaders";
 import Minimap from "@/components/Minimap";
 import Link from "next/link";
 import { slides } from "@/data/slides";
+import { getInterpolatedGradient } from "@/utils/gradients";
+import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
 
 // ! TODO: fix links if early click
+// ! TODO: pixels between images in the slider
 
 export default function Slider() {
   const containerRef = useRef<HTMLDivElement>(null);
   const projectTitleRef = useRef<HTMLHeadingElement>(null);
+  const projectSubtitleRef = useRef<HTMLHeadingElement>(null);
   const projectLinkRef = useRef<HTMLAnchorElement>(null);
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [realTimePosition, setRealTimePosition] = useState(0);
@@ -32,6 +39,12 @@ export default function Slider() {
     height: 0,
   });
   const [touchMoved, setTouchMoved] = useState(false);
+  const [isSliderMoving, setIsSliderMoving] = useState(false);
+  const [currentGradient, setCurrentGradient] = useState({
+    from: "rgb(250, 250, 250)",
+    via: "rgb(253, 242, 248)",
+    to: "rgb(254, 243, 199)",
+  });
   const sceneRef = useRef<{
     scene?: Scene;
     camera?: PerspectiveCamera;
@@ -44,16 +57,19 @@ export default function Slider() {
     if (
       !containerRef.current ||
       !projectTitleRef.current ||
+      !projectSubtitleRef.current ||
       !projectLinkRef.current
     )
       return;
 
     const container = containerRef.current;
     const projectTitle = projectTitleRef.current;
+    const projectSubtitle = projectSubtitleRef.current;
     const projectLink = projectLinkRef.current;
 
-    // Initialize project title and link
+    // Initialize project title, subtitle and link
     projectTitle.textContent = slides[0].title;
+    projectSubtitle.textContent = slides[0].subtitle;
     projectLink.href = slides[0].url;
 
     // WebGL state variables
@@ -111,7 +127,7 @@ export default function Slider() {
       } else if (window.innerWidth < 1024) {
         widthFactor = 0.6;
       } else {
-        widthFactor = 0.5;
+        widthFactor = 0.3;
       }
 
       const planeWidth = viewportWidth * widthFactor;
@@ -246,14 +262,13 @@ export default function Slider() {
 
     function navigateToSlide(targetIndex: number) {
       if (targetIndex >= 0 && targetIndex < slides.length) {
-        lastInteractionTime = Date.now(); // Track interaction time
+        // Track interaction time
+        lastInteractionTime = Date.now();
 
-        // Calculate direction and distance for scroll intensity effect
         const currentPos = scrollPosition;
         const distance = targetIndex - currentPos;
         const direction = distance > 0 ? 1 : -1;
 
-        // Add scroll intensity based on distance (more distance = more intensity)
         const intensityMultiplier = Math.min(Math.abs(distance) * 0.3, 0.8);
         targetScrollIntensity += direction * intensityMultiplier;
 
@@ -277,29 +292,51 @@ export default function Slider() {
     function hideTitle() {
       if (!titleHidden && !titleAnimating) {
         titleAnimating = true;
-        projectTitle.style.transform = "translateY(20px)";
-        projectTitle.style.opacity = "0";
 
-        setTimeout(() => {
-          titleAnimating = false;
-          titleHidden = true;
-        }, 500);
+        gsap.killTweensOf([projectTitle, projectSubtitle]);
+
+        gsap.to([projectTitle, projectSubtitle], {
+          y: 100,
+          duration: 0.2,
+          ease: "power2.in",
+          onComplete: () => {
+            titleAnimating = false;
+            titleHidden = true;
+          },
+        });
       }
     }
 
     function showTitle() {
       if (titleHidden && !titleAnimating) {
         projectTitle.textContent = slides[currentProjectIndex].title;
+        projectSubtitle.textContent = slides[currentProjectIndex].subtitle;
         projectLink.href = slides[currentProjectIndex].url;
 
         titleAnimating = true;
-        projectTitle.style.transform = "translateY(0px)";
-        projectTitle.style.opacity = "1";
 
-        setTimeout(() => {
-          titleAnimating = false;
-          titleHidden = false;
-        }, 500);
+        gsap.killTweensOf([projectTitle, projectSubtitle]);
+
+        gsap.set([projectTitle, projectSubtitle], {
+          y: 100,
+        });
+
+        gsap.to(projectTitle, {
+          y: 0,
+          duration: 0.1,
+          ease: "power4.out",
+        });
+
+        gsap.to(projectSubtitle, {
+          y: 0,
+          duration: 0.1,
+          delay: 0.07,
+          ease: "power4.out",
+          onComplete: () => {
+            titleAnimating = false;
+            titleHidden = false;
+          },
+        });
       }
     }
 
@@ -342,12 +379,11 @@ export default function Slider() {
       touchStartX = touch.clientX;
       lastTouchY = touch.clientY;
       touchStartTime = Date.now();
-      lastInteractionTime = touchStartTime; // Track interaction
+      lastInteractionTime = touchStartTime;
       isTouching = true;
       isDragging = false;
       setTouchMoved(false);
 
-      // Reset states for smooth interaction
       isSnapping = false;
       isStable = false;
       isMoving = true;
@@ -369,7 +405,6 @@ export default function Slider() {
         hideTitle();
       }
 
-      // Only process slider movement if we're dragging
       if (isDragging) {
         lastTouchY = touch.clientY;
 
@@ -403,24 +438,21 @@ export default function Slider() {
         animate();
       }
 
-      // Reset touchMoved after a brief delay to allow click events to process
       setTimeout(() => {
         setTouchMoved(false);
       }, 50);
     };
 
-    // Mouse handlers for desktop drag functionality
     const handleMouseDown = (event: MouseEvent) => {
       mouseStartY = event.clientY;
       mouseStartX = event.clientX;
       lastMouseY = event.clientY;
       mouseStartTime = Date.now();
-      lastInteractionTime = mouseStartTime; // Track interaction
+      lastInteractionTime = mouseStartTime;
       isMouseDown = true;
       isMouseDragging = false;
       setTouchMoved(false);
 
-      // Reset states for smooth interaction
       isSnapping = false;
       isStable = false;
       isMoving = true;
@@ -441,7 +473,6 @@ export default function Slider() {
         hideTitle();
       }
 
-      // Only process slider movement if we're dragging
       if (isMouseDragging) {
         lastMouseY = event.clientY;
 
@@ -474,7 +505,6 @@ export default function Slider() {
         animate();
       }
 
-      // Reset touchMoved after a brief delay to allow click events to process
       setTimeout(() => {
         setTouchMoved(false);
       }, 50);
@@ -515,16 +545,18 @@ export default function Slider() {
       // Clamp scroll position to carousel boundaries
       scrollPosition = Math.max(0, Math.min(slides.length - 1, scrollPosition));
 
-      // Update real-time position for minimap
       const clampedScrollPosition = scrollPosition;
 
-      // Only update state if position changed significantly (optimization)
+      // Only update state if position changed significantly
       if (
         Math.abs(clampedScrollPosition - lastRealTimePositionRef.current) > 0.01
       ) {
         setRealTimePosition(clampedScrollPosition);
         lastRealTimePositionRef.current = clampedScrollPosition;
       }
+
+      // Update moving state for minimap
+      setIsSliderMoving(isMoving);
 
       // Calculate normalized position for shader (position within current slide transition)
       const indices = determineTextureIndices(scrollPosition);
@@ -583,15 +615,33 @@ export default function Slider() {
         }
       }
 
-      // Force render even when not moving to ensure mobile browsers stay responsive
+      // Fallback: ensure text appears at boundaries or when movement stops
+      if (!isMoving && titleHidden && !titleAnimating) {
+        const clampedPosition = Math.max(
+          0,
+          Math.min(slides.length - 1, scrollPosition),
+        );
+        const roundedPosition = Math.round(clampedPosition);
+
+        // Force show text if we're at boundaries or stable position
+        if (
+          clampedPosition <= 0.1 ||
+          clampedPosition >= slides.length - 1.1 ||
+          Math.abs(clampedPosition - roundedPosition) < 0.1
+        ) {
+          const indices = determineTextureIndices(roundedPosition);
+          currentProjectIndex = indices.currentIndex;
+          setCurrentSlideIndex(indices.currentIndex);
+          showTitle();
+        }
+      }
+
       renderer.render(scene, camera);
       sceneRef.current.animationId = requestAnimationFrame(animate);
     }
 
-    // Start animation
     animate();
 
-    // Add event listeners
     window.addEventListener("resize", handleResize);
     window.addEventListener("wheel", handleWheel, { passive: false });
 
@@ -613,7 +663,6 @@ export default function Slider() {
     });
     document.addEventListener("mouseup", handleMouseUp);
 
-    // Cleanup function
     sceneRef.current.cleanup = () => {
       if (sceneRef.current.animationId) {
         cancelAnimationFrame(sceneRef.current.animationId);
@@ -622,23 +671,19 @@ export default function Slider() {
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("wheel", handleWheel);
 
-      // Remove touch event listeners
       document.removeEventListener("touchstart", handleTouchStart);
       document.removeEventListener("touchmove", handleTouchMove);
       document.removeEventListener("touchend", handleTouchEnd);
 
-      // Remove mouse event listeners
       document.removeEventListener("mousedown", handleMouseDown);
       document.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseup", handleMouseUp);
 
-      // Dispose Three.js resources
       geometry.dispose();
       material.dispose();
       textures.forEach((texture) => texture.dispose());
       renderer.dispose();
 
-      // Remove canvas from DOM
       if (container.contains(renderer.domElement)) {
         container.removeChild(renderer.domElement);
       }
@@ -647,6 +692,14 @@ export default function Slider() {
     return sceneRef.current.cleanup;
   }, []);
 
+  useEffect(() => {
+    const interpolatedGradient = getInterpolatedGradient(
+      realTimePosition,
+      slides.map((slide) => slide.gradientScheme),
+    );
+    setCurrentGradient(interpolatedGradient);
+  }, [realTimePosition]);
+
   const handleNavigateToSlide = (index: number) => {
     if (navigationFunctionRef.current) {
       navigationFunctionRef.current(index);
@@ -654,7 +707,12 @@ export default function Slider() {
   };
 
   return (
-    <div className="slider-page relative grid max-h-dvh w-screen overflow-hidden">
+    <div
+      className="slider-page relative grid max-h-dvh w-screen overflow-hidden transition-all duration-300 ease-out"
+      style={{
+        background: `linear-gradient(to bottom, ${currentGradient.from}, ${currentGradient.via} 70%, ${currentGradient.to})`,
+      }}
+    >
       <section className="grid-area relative flex w-full items-center justify-center">
         <div id="container" ref={containerRef} className="relative size-full" />
 
@@ -663,22 +721,34 @@ export default function Slider() {
           realTimePosition={realTimePosition}
           totalSlides={slides.length}
           onNavigate={handleNavigateToSlide}
-          className="absolute top-1/2 right-4 -translate-y-1/2"
+          height={planeDimensions.height}
+          isMoving={isSliderMoving}
+          className="absolute top-1/2 right-6 -translate-y-1/2"
         />
       </section>
 
-      <section className="grid-area flex flex-col items-center justify-center text-center">
-        <h2
-          id="project-title"
-          ref={projectTitleRef}
-          className="relative text-sm font-semibold tracking-[-0.01em] text-white bg-blend-difference backdrop-blur-sm transition-all duration-500 ease-in-out"
-        >
-          Loading...
-        </h2>
+      <section className="grid-area mt-[30rem] ml-[31rem] flex max-w-[250px] flex-col justify-center">
+        <div className="overflow-hidden">
+          <h2
+            id="project-title"
+            ref={projectTitleRef}
+            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] mix-blend-difference transition-all duration-500 ease-in-out"
+          >
+            Loading...
+          </h2>
+        </div>
+        <div className="mt-0.5 overflow-hidden">
+          <h3
+            ref={projectSubtitleRef}
+            className="font-plus-jakarta-sans relative text-xs font-medium tracking-[-0.01em] text-zinc-500 transition-all duration-500 ease-in-out"
+          >
+            Loading...
+          </h3>
+        </div>
         <Link
           id="project-link"
           ref={projectLinkRef}
-          href="/about"
+          href={slides[currentSlideIndex].url}
           draggable={false}
           className="pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center select-none [user-drag:none]"
           style={{
