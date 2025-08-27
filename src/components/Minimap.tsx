@@ -4,59 +4,124 @@ interface MinimapProps {
   activeIndex: number;
   realTimePosition: number;
   totalSlides: number;
-  onNavigate: (index: number) => void;
+  height: number;
+  isMoving: boolean;
   className?: string;
+  onNavigate: (index: number) => void;
 }
 
 export default function Minimap({
   activeIndex,
   realTimePosition,
   totalSlides,
-  onNavigate,
+  height,
+  isMoving,
   className,
+  onNavigate,
 }: MinimapProps) {
-  const indicatorY = realTimePosition * 16;
+  const dashesPerSlide = 6;
+  const totalDashes = (totalSlides - 1) * dashesPerSlide + 1;
 
-  const projects = Array.from({ length: totalSlides }, (_, i) => ({
-    name: i + 1,
-    index: i,
-  }));
+  const allDashes = Array.from({ length: totalDashes }, (_, i) => {
+    const slidePosition = i / dashesPerSlide;
+    const slideIndex = Math.floor(slidePosition);
+    const dashIndexInSlide = i % dashesPerSlide;
+    const isMainDash = dashIndexInSlide === 0 && slideIndex < totalSlides;
 
-  const getItemOpacity = (itemIndex: number) => {
-    const indicatorCenter = indicatorY + 8;
-    const itemCenter = itemIndex * 16 + 5;
-    const distance = Math.abs(indicatorCenter - itemCenter);
+    return {
+      index: i,
+      slideIndex,
+      dashIndexInSlide,
+      isMainDash,
+      slidePosition,
+      label: isMainDash ? String(slideIndex + 1).padStart(2, "0") : null,
+    };
+  });
 
-    return distance < 12 ? "opacity-75" : "opacity-20";
+  const getDashScale = (dashIndex: number) => {
+    const dashPosition = dashIndex / dashesPerSlide;
+    const distance = Math.abs(realTimePosition - dashPosition);
+
+    // When slider is snapped/stable, only show the exact slide dash at full scale
+    if (!isMoving) {
+      const currentSlideDashIndex = activeIndex * dashesPerSlide;
+      return dashIndex === currentSlideDashIndex ? "scale-x-75" : "scale-x-25";
+    }
+
+    if (distance === 0) return "scale-x-90";
+    if (distance <= 0.2) return "scale-x-80";
+    if (distance <= 0.5) return "scale-x-65";
+    if (distance <= 1) return "scale-x-50";
+    if (distance <= 1.5) return "scale-x-35";
+    return "scale-x-25";
   };
 
-  const handleProjectClick = (projectIndex: number) => {
-    if (projectIndex !== activeIndex) {
-      onNavigate(projectIndex);
+  const getDashOpacity = (dashIndex: number) => {
+    const dashPosition = dashIndex / dashesPerSlide;
+    const distance = Math.abs(realTimePosition - dashPosition);
+
+    // When slider is snapped/stable, only show the exact slide dash with full opacity
+    if (!isMoving) {
+      const currentSlideDashIndex = activeIndex * dashesPerSlide;
+      return dashIndex === currentSlideDashIndex ? "opacity-100" : "opacity-40";
+    }
+
+    if (distance === 0) return "opacity-100";
+    if (distance <= 0.5) return "opacity-90";
+    if (distance <= 1) return "opacity-80";
+    return "opacity-40";
+  };
+
+  const handleProjectClick = (slideIndex: number) => {
+    if (slideIndex < totalSlides) {
+      onNavigate(slideIndex);
     }
   };
 
   return (
-    <nav className={cn("relative", className)}>
-      <ul className="flex flex-col gap-y-1.5">
-        {projects.map((project, index) => (
-          <li key={project.name} className="group w-3.5 cursor-pointer">
+    <nav
+      className={cn(
+        "relative mr-[26rem] flex flex-col justify-between py-8",
+        className,
+      )}
+      style={{ height: `${height + 64}px` }}
+    >
+      <div className="flex h-full flex-col justify-between">
+        {allDashes.map((dash) => (
+          <div
+            key={dash.index}
+            className="group relative flex cursor-pointer items-center"
+          >
             <button
-              onClick={() => handleProjectClick(project.index)}
+              onClick={() => handleProjectClick(dash.slideIndex)}
               className={cn(
-                "block h-2.5 w-full cursor-pointer rounded-xs border transition-opacity duration-300 group-hover:opacity-75",
-                getItemOpacity(index),
+                "bg-dark h-[1px] w-3 origin-left transition-all duration-500 ease-out",
+                getDashScale(dash.index),
+                getDashOpacity(dash.index),
+                "group-hover:bg-dark/80",
               )}
             />
-          </li>
+            {dash.isMainDash && (
+              <button
+                onClick={() => handleProjectClick(dash.slideIndex)}
+                className={cn(
+                  "absolute left-8 cursor-pointer font-mono text-[10px] transition-all duration-500 select-none hover:scale-110",
+                  // When snapped, only current active slide number has full opacity; when moving, use proximity
+                  !isMoving
+                    ? dash.slideIndex === activeIndex
+                      ? "text-dark/90 opacity-100"
+                      : "text-dark/50 opacity-70 hover:opacity-90"
+                    : Math.abs(realTimePosition - dash.slideIndex) <= 1
+                      ? "text-dark/90 opacity-100"
+                      : "text-dark/50 opacity-70 hover:opacity-90",
+                )}
+              >
+                {dash.label}
+              </button>
+            )}
+          </div>
         ))}
-      </ul>
-      <div
-        className="absolute -top-1 -left-2 rounded-xs border px-3.5 py-2 opacity-75"
-        style={{
-          transform: `translate3d(0, ${indicatorY}px, 0)`,
-        }}
-      />
+      </div>
     </nav>
   );
 }
