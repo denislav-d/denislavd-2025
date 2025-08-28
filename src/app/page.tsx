@@ -19,8 +19,12 @@ import { slides } from "@/data/slides";
 import { getInterpolatedGradient } from "@/utils/gradients";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
+import { CustomEase } from "gsap/CustomEase";
 
 gsap.registerPlugin(SplitText);
+gsap.registerPlugin(CustomEase);
+CustomEase.create("hop", "0.9, 0, 0.1, 1");
+CustomEase.create("text", "0.5, 1, 0.89, 1");
 
 // ! TODO: fix links if early click
 // ! TODO: pixels between images in the slider
@@ -41,9 +45,9 @@ export default function Slider() {
   const [touchMoved, setTouchMoved] = useState(false);
   const [isSliderMoving, setIsSliderMoving] = useState(false);
   const [currentGradient, setCurrentGradient] = useState({
-    from: "rgb(250, 250, 250)",
-    via: "rgb(253, 242, 248)",
-    to: "rgb(254, 243, 199)",
+    from: slides[0].gradientScheme.from,
+    via: slides[0].gradientScheme.via,
+    to: slides[0].gradientScheme.to,
   });
   const sceneRef = useRef<{
     scene?: Scene;
@@ -206,6 +210,38 @@ export default function Slider() {
     const plane = new Mesh(geometry, material);
     scene.add(plane);
 
+    gsap.set(container, {
+      clipPath: "polygon(40% 35%, 60% 35%, 60% 65%, 40% 65%)",
+      scale: 0.4,
+    });
+
+    gsap.set([projectTitle, projectSubtitle], {
+      y: 100,
+    });
+
+    gsap.to(container, {
+      scale: 1,
+      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+      duration: 1.4,
+      ease: "hop",
+    });
+
+    gsap.to(projectTitle, {
+      y: 0,
+      duration: 1,
+      delay: 0.8,
+      ease: "text",
+      opacity: 1,
+    });
+
+    gsap.to(projectSubtitle, {
+      y: 0,
+      duration: 1,
+      delay: 0.9,
+      opacity: 1,
+      ease: "text",
+    });
+
     function determineTextureIndices(position: number) {
       const totalImages = slides.length;
 
@@ -323,15 +359,15 @@ export default function Slider() {
 
         gsap.to(projectTitle, {
           y: 0,
-          duration: 0.1,
-          ease: "power4.out",
+          duration: 0.7,
+          ease: "text",
         });
 
         gsap.to(projectSubtitle, {
           y: 0,
-          duration: 0.1,
-          delay: 0.07,
-          ease: "power4.out",
+          duration: 0.7,
+          delay: 0.1,
+          ease: "text",
           onComplete: () => {
             titleAnimating = false;
             titleHidden = false;
@@ -711,6 +747,7 @@ export default function Slider() {
       className="slider-page relative grid max-h-dvh w-screen overflow-hidden transition-all duration-300 ease-out"
       style={{
         background: `linear-gradient(to bottom, ${currentGradient.from}, ${currentGradient.via} 70%, ${currentGradient.to})`,
+        minHeight: "100dvh",
       }}
     >
       <section className="grid-area relative flex w-full items-center justify-center">
@@ -732,18 +769,14 @@ export default function Slider() {
           <h2
             id="project-title"
             ref={projectTitleRef}
-            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] mix-blend-difference transition-all duration-500 ease-in-out"
-          >
-            Loading...
-          </h2>
+            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] opacity-0 mix-blend-difference"
+          ></h2>
         </div>
         <div className="mt-0.5 overflow-hidden">
           <h3
             ref={projectSubtitleRef}
-            className="font-plus-jakarta-sans relative text-xs font-medium tracking-[-0.01em] text-zinc-500 transition-all duration-500 ease-in-out"
-          >
-            Loading...
-          </h3>
+            className="font-plus-jakarta-sans relative text-xs font-medium tracking-[-0.01em] text-zinc-500 opacity-0"
+          ></h3>
         </div>
         <Link
           id="project-link"
