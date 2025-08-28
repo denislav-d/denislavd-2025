@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { cn } from "@/utils/utils";
+import TextReveal from "@/components/TextReveal";
 
 export default function TopNavigation() {
   const pathname = usePathname();
@@ -20,35 +21,41 @@ export default function TopNavigation() {
 
   return (
     <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
-      <Link href="/" className="w-fit">
-        Denislav <span className="xs:inline-block hidden">Dimitrov</span>
-      </Link>
+      <TextReveal delay={0.2}>
+        <Link href="/" className="w-fit">
+          Denislav <span className="xs:inline-block hidden">Dimitrov</span>
+        </Link>
+      </TextReveal>
 
       <div className="flex justify-end gap-x-4 md:justify-center">
-        <Link
-          href="/thoughts"
-          className={cn(
-            "inline-block transition-transform duration-600 ease-in-out",
-            pathname === "/" ? "translate-x-0" : "translate-x-2",
-          )}
-        >
-          Thoughts
-        </Link>
+        <TextReveal delay={0.3}>
+          <Link
+            href="/thoughts"
+            className={cn(
+              "inline-block transition-transform duration-600 ease-in-out",
+              pathname === "/" ? "translate-x-0" : "translate-x-2",
+            )}
+          >
+            Thoughts
+          </Link>
+        </TextReveal>
 
         <div className="relative grid overflow-hidden">
           {/* Projects Link */}
           <div className="grid-area origin-[50%_50%_0]">
-            <Link
-              href={pathname === "/" ? "/" : "/"}
-              className={cn(
-                "inline-block w-full text-center transition-all duration-600 ease-in-out",
-                pathname === "/"
-                  ? "pointer-events-none translate-y-full scale-95"
-                  : "translate-y-0 scale-100",
-              )}
-            >
-              Projects
-            </Link>
+            <TextReveal delay={0.35}>
+              <Link
+                href={pathname === "/" ? "/" : "/"}
+                className={cn(
+                  "inline-block w-full text-center transition-all duration-600 ease-in-out",
+                  pathname === "/"
+                    ? "pointer-events-none translate-y-full scale-95"
+                    : "translate-y-0 scale-100",
+                )}
+              >
+                Projects
+              </Link>
+            </TextReveal>
           </div>
 
           <div className="grid-area origin-[50%_50%_0]">
@@ -60,50 +67,62 @@ export default function TopNavigation() {
                   : "pointer-events-none -translate-y-full scale-95",
               )}
             >
-              <Link
-                href={pathname === "/" ? "" : "/"}
-                className={cn(
-                  "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/" ? "translate-x-1 scale-95" : "scale-100",
-                )}
-              >
-                Slider
-              </Link>{" "}
-              <span
-                className={cn(
-                  "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/" ? "-translate-x-0.5 scale-95" : "scale-100",
-                )}
-              >
-                /
-              </span>{" "}
-              <Link
-                href="/projects"
-                className={cn(
-                  "inline-block transition-all duration-600 ease-in-out",
-                  pathname !== "/" ? "-translate-x-1 scale-95" : "scale-100",
-                )}
-              >
-                Grid
-              </Link>
+              <TextReveal delay={0.4}>
+                <Link
+                  href={pathname === "/" ? "" : "/"}
+                  className={cn(
+                    "inline-block transition-all duration-600 ease-in-out",
+                    pathname !== "/" ? "translate-x-1 scale-95" : "scale-100",
+                  )}
+                >
+                  Slider
+                </Link>
+              </TextReveal>{" "}
+              <TextReveal delay={0.45}>
+                <span
+                  className={cn(
+                    "inline-block transition-all duration-600 ease-in-out",
+                    pathname !== "/"
+                      ? "-translate-x-0.5 scale-95"
+                      : "scale-100",
+                  )}
+                >
+                  /
+                </span>
+              </TextReveal>{" "}
+              <TextReveal delay={0.5}>
+                <Link
+                  href="/projects"
+                  className={cn(
+                    "inline-block transition-all duration-600 ease-in-out",
+                    pathname !== "/" ? "-translate-x-1 scale-95" : "scale-100",
+                  )}
+                >
+                  Grid
+                </Link>
+              </TextReveal>
             </span>
           </div>
         </div>
 
-        <Link
-          href="/about"
-          className={cn(
-            "inline-block transition-transform duration-600 ease-in-out",
-            pathname === "/" ? "translate-x-0" : "-translate-x-2",
-          )}
-        >
-          About
-        </Link>
+        <TextReveal delay={0.6}>
+          <Link
+            href="/about"
+            className={cn(
+              "inline-block transition-transform duration-600 ease-in-out",
+              pathname === "/" ? "translate-x-0" : "-translate-x-2",
+            )}
+          >
+            About
+          </Link>
+        </TextReveal>
       </div>
 
-      <span className="hidden text-right md:block">
-        Design-Driven Developer
-      </span>
+      <TextReveal delay={0.7}>
+        <span className="hidden text-right md:block">
+          Design-Driven Developer
+        </span>
+      </TextReveal>
     </nav>
   );
 }

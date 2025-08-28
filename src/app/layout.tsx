@@ -8,8 +8,13 @@ const plusJakartaSans = Plus_Jakarta_Sans({
   variable: "--font-plus-jakarta-sans",
 });
 
+// ! TODO: dynamic metadata?
+
 export const metadata: Metadata = {
   title: "Denislav Dimitrov",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
