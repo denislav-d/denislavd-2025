@@ -124,12 +124,16 @@ export default function Slider() {
 
       // Responsive scaling
       let widthFactor;
-      if (window.innerWidth < 600) {
-        widthFactor = 1;
-      } else if (window.innerWidth < 768) {
+      if (window.innerWidth < 400) {
+        widthFactor = 0.8;
+      } else if (window.innerWidth < 600) {
         widthFactor = 0.7;
+      } else if (window.innerWidth < 900) {
+        widthFactor = 0.5;
       } else if (window.innerWidth < 1024) {
-        widthFactor = 0.6;
+        widthFactor = 0.4;
+      } else if (window.innerWidth < 1200) {
+        widthFactor = 0.35;
       } else {
         widthFactor = 0.3;
       }
@@ -146,7 +150,7 @@ export default function Slider() {
       const screenHeight =
         (planeHeight / correctViewportHeight) * window.innerHeight;
 
-      // Update state for CSS positioning
+      // Update state for CSS anchor positioning
       setPlaneDimensions({ width: screenWidth, height: screenHeight });
 
       return {
@@ -751,25 +755,40 @@ export default function Slider() {
       }}
     >
       <section className="grid-area relative flex w-full items-center justify-center">
-        <div id="container" ref={containerRef} className="relative size-full" />
+        <div
+          id="container"
+          ref={containerRef}
+          className="relative size-full max-sm:-ml-16"
+        />
 
         <Minimap
           activeIndex={currentSlideIndex}
           realTimePosition={realTimePosition}
           totalSlides={slides.length}
           onNavigate={handleNavigateToSlide}
-          height={planeDimensions.height}
           isMoving={isSliderMoving}
-          className="absolute top-1/2 right-6 -translate-y-1/2"
+          className="max-sm:-ml-8"
+          style={{
+            height: `${planeDimensions.height}px`,
+            top: `calc(50% - ${planeDimensions.height / 2}px)`,
+            left: `calc(50% + ${planeDimensions.width / 2}px + 40px)`,
+          }}
         />
       </section>
 
-      <section className="grid-area mt-[30rem] ml-[31rem] flex max-w-[250px] flex-col justify-center">
+      <section
+        className="pointer-events-none absolute flex flex-col justify-start max-sm:-ml-8"
+        style={{
+          top: `calc(50% + ${planeDimensions.height / 2}px + 10px)`,
+          left: `calc(50% - ${planeDimensions.width / 2}px)`,
+          width: `${planeDimensions.width}px`,
+        }}
+      >
         <div className="overflow-hidden">
           <h2
             id="project-title"
             ref={projectTitleRef}
-            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] opacity-0 mix-blend-difference"
+            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] opacity-0 mix-blend-difference will-change-transform backface-hidden"
           ></h2>
         </div>
         <div className="mt-0.5 overflow-hidden">
@@ -778,25 +797,27 @@ export default function Slider() {
             className="font-plus-jakarta-sans relative text-xs font-medium tracking-[-0.01em] text-zinc-500 opacity-0"
           ></h3>
         </div>
-        <Link
-          id="project-link"
-          ref={projectLinkRef}
-          href={slides[currentSlideIndex].url}
-          draggable={false}
-          className="pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center select-none [user-drag:none]"
-          style={{
-            width: `${planeDimensions.width}px`,
-            height: `${planeDimensions.height}px`,
-          }}
-          onClick={(e) => {
-            // Prevent navigation if user was dragging
-            if (touchMoved) {
-              e.preventDefault();
-              return false;
-            }
-          }}
-        ></Link>
       </section>
+
+      <Link
+        id="project-link"
+        ref={projectLinkRef}
+        href={slides[currentSlideIndex].url}
+        draggable={false}
+        aria-label="Open project"
+        className="pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center select-none [user-drag:none]"
+        style={{
+          width: `${planeDimensions.width}px`,
+          height: `${planeDimensions.height}px`,
+        }}
+        onClick={(e) => {
+          // Prevent navigation if user was dragging
+          if (touchMoved) {
+            e.preventDefault();
+            return false;
+          }
+        }}
+      ></Link>
     </div>
   );
 }

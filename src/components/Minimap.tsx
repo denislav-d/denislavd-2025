@@ -8,20 +8,20 @@ interface MinimapProps {
   activeIndex: number;
   realTimePosition: number;
   totalSlides: number;
-  height: number;
   isMoving: boolean;
   className?: string;
   onNavigate: (index: number) => void;
+  style?: React.CSSProperties;
 }
 
 export default function Minimap({
   activeIndex,
   realTimePosition,
   totalSlides,
-  height,
   isMoving,
   className,
   onNavigate,
+  style,
 }: MinimapProps) {
   const minimapRef = useRef<HTMLElement>(null);
   const dashesPerSlide = 6;
@@ -138,10 +138,10 @@ export default function Minimap({
     <nav
       ref={minimapRef}
       className={cn(
-        "relative mr-[26rem] flex flex-col justify-between py-8 opacity-0",
+        "absolute flex flex-col justify-between opacity-0",
         className,
       )}
-      style={{ height: `${height + 64}px` }}
+      style={style}
     >
       <div className="flex h-full flex-col justify-between">
         {allDashes.map((dash) => (
