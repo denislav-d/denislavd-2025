@@ -1,4 +1,8 @@
+"use client";
+
 import { cn } from "@/utils/utils";
+import { useEffect, useRef } from "react";
+import gsap from "gsap";
 
 interface MinimapProps {
   activeIndex: number;
@@ -19,8 +23,60 @@ export default function Minimap({
   className,
   onNavigate,
 }: MinimapProps) {
+  const minimapRef = useRef<HTMLElement>(null);
   const dashesPerSlide = 6;
   const totalDashes = (totalSlides - 1) * dashesPerSlide + 1;
+
+  useEffect(() => {
+    if (!minimapRef.current) return;
+
+    const dashes = minimapRef.current.querySelectorAll("[data-dash]");
+    const numbers = minimapRef.current.querySelectorAll("[data-number]");
+
+    gsap.set(dashes, { opacity: 0 });
+    gsap.set(numbers, {
+      opacity: 0,
+      transform: "scale(0)",
+      transition: "none",
+    });
+
+    gsap.to(minimapRef.current, {
+      opacity: 1,
+      duration: 0.3,
+      delay: 0.6,
+      ease: "power2.out",
+    });
+
+    gsap.to(dashes, {
+      opacity: 1,
+      duration: 0.3,
+      stagger: 0.05,
+      ease: "power2.out",
+      delay: 1,
+      onComplete: () => {
+        // Restore CSS transitions after animation completes
+        gsap.set(dashes, {
+          clearProps: "opacity",
+        });
+      },
+    });
+
+    gsap.to(numbers, {
+      opacity: 1,
+      transform: "scale(1)",
+      duration: 0.5,
+      stagger: 0.15,
+      ease: "back.out(1.7)",
+      delay: 1.4,
+      onComplete: () => {
+        // Restore CSS transitions after animation completes
+        gsap.set(numbers, {
+          transition: "all 500ms ease-out",
+          clearProps: "transform, opacity",
+        });
+      },
+    });
+  }, []);
 
   const allDashes = Array.from({ length: totalDashes }, (_, i) => {
     const slidePosition = i / dashesPerSlide;
@@ -80,8 +136,9 @@ export default function Minimap({
 
   return (
     <nav
+      ref={minimapRef}
       className={cn(
-        "relative mr-[26rem] flex flex-col justify-between py-8",
+        "relative mr-[26rem] flex flex-col justify-between py-8 opacity-0",
         className,
       )}
       style={{ height: `${height + 64}px` }}
@@ -93,6 +150,7 @@ export default function Minimap({
             className="group relative flex cursor-pointer items-center"
           >
             <button
+              data-dash
               onClick={() => handleProjectClick(dash.slideIndex)}
               className={cn(
                 "bg-dark h-[1px] w-3 origin-left transition-all duration-500 ease-out",
@@ -103,6 +161,7 @@ export default function Minimap({
             />
             {dash.isMainDash && (
               <button
+                data-number
                 onClick={() => handleProjectClick(dash.slideIndex)}
                 className={cn(
                   "absolute left-8 cursor-pointer font-mono text-[10px] transition-all duration-500 select-none hover:scale-110",
