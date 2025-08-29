@@ -15,6 +15,7 @@
   --color-secondary: #afaba0;
 
   --ease-in-out: cubic-bezier(0.87, 0, 0.13, 1);
+  --ease-in-out-cubic: cubic-bezier(0.65, 0, 0.35, 1);
 }
 
 /* Disable transitions on page load to prevent glitched animations */
@@ -24,4 +25,42 @@
 
 .grid-area {
   grid-area: 1/1;
+}
+
+/* Underline animation for navigation links */
+.underline-animation::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background-color: currentColor;
+  transform: translateZ(0) scaleX(0);
+  transform-origin: left;
+  transition: transform 700ms var(--ease-in-out-cubic);
+  will-change: transform;
+}
+
+.underline-animation.is-active::after {
+  transform: translateZ(0) scaleX(1);
+  transition-delay: 250ms;
+}
+
+/* Prevent trailing animations on non-active items to avoid flickering */
+.underline-animation:not(.is-active)::after {
+  transition-duration: 0ms;
+}
+
+.underline-animation:not(.is-active)::after {
+  transition-duration: 0ms;
+}
+
+/* Ensure initial appear animation on load */
+.preload .underline-animation.is-active::after {
+  transform: translateZ(0) scaleX(0);
+}
+
+.preload .underline-animation.is-active::after {
+  transform: translateZ(0) scaleX(0);
 }

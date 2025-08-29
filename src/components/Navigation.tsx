@@ -6,7 +6,7 @@ import { useEffect } from "react";
 import { cn } from "@/utils/utils";
 import TextReveal from "@/components/TextReveal";
 
-export default function TopNavigation() {
+export default function Navigation() {
   const pathname = usePathname();
 
   // Remove preload class after component mounts to enable transitions
@@ -17,10 +17,8 @@ export default function TopNavigation() {
     return () => clearTimeout(timer);
   }, []);
 
-  // ! TODO: fix slider/all links, transform-none?
-
   return (
-    <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
+    <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs leading-tight font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
       <TextReveal delay={0.2}>
         <Link href="/" className="w-fit">
           Denislav <span className="xs:inline-block hidden">Dimitrov</span>
@@ -32,8 +30,11 @@ export default function TopNavigation() {
           <Link
             href="/thoughts"
             className={cn(
-              "inline-block transition-transform duration-600 ease-in-out",
-              pathname === "/" ? "translate-x-0" : "translate-x-2",
+              "underline-animation relative inline-block transition-transform duration-600 ease-in-out after:bottom-[2.5px]!",
+              pathname === "/" || pathname === "/projects"
+                ? "translate-x-0"
+                : "translate-x-2",
+              pathname?.startsWith("/thoughts") && "is-active",
             )}
           >
             Thoughts
@@ -45,10 +46,10 @@ export default function TopNavigation() {
           <div className="grid-area origin-[50%_50%_0]">
             <TextReveal delay={0.35}>
               <Link
-                href={pathname === "/" ? "/" : "/"}
+                href="/"
                 className={cn(
                   "inline-block w-full text-center transition-all duration-600 ease-in-out",
-                  pathname === "/"
+                  pathname === "/" || pathname === "/projects"
                     ? "pointer-events-none translate-y-full scale-95"
                     : "translate-y-0 scale-100",
                 )}
@@ -62,17 +63,20 @@ export default function TopNavigation() {
             <span
               className={cn(
                 "inline-block w-full transition-all duration-600 ease-in-out",
-                pathname === "/"
+                pathname === "/" || pathname === "/projects"
                   ? "translate-y-0 scale-100"
                   : "pointer-events-none -translate-y-full scale-95",
               )}
             >
               <TextReveal delay={0.4}>
                 <Link
-                  href={pathname === "/" ? "" : "/"}
+                  href="/"
                   className={cn(
-                    "inline-block transition-all duration-600 ease-in-out",
-                    pathname !== "/" ? "translate-x-1 scale-95" : "scale-100",
+                    "underline-animation relative inline-block transition-all duration-600 ease-in-out",
+                    pathname !== "/" && pathname !== "/projects"
+                      ? "translate-x-1 scale-95"
+                      : "scale-100",
+                    pathname === "/" && "is-active",
                   )}
                 >
                   Slider
@@ -82,7 +86,7 @@ export default function TopNavigation() {
                 <span
                   className={cn(
                     "inline-block transition-all duration-600 ease-in-out",
-                    pathname !== "/"
+                    pathname !== "/" && pathname !== "/projects"
                       ? "-translate-x-0.5 scale-95"
                       : "scale-100",
                   )}
@@ -94,8 +98,11 @@ export default function TopNavigation() {
                 <Link
                   href="/projects"
                   className={cn(
-                    "inline-block transition-all duration-600 ease-in-out",
-                    pathname !== "/" ? "-translate-x-1 scale-95" : "scale-100",
+                    "underline-animation relative inline-block transition-all duration-600 ease-in-out",
+                    pathname !== "/" && pathname !== "/projects"
+                      ? "-translate-x-1 scale-95"
+                      : "scale-100",
+                    pathname === "/projects" && "is-active",
                   )}
                 >
                   Grid
@@ -109,8 +116,11 @@ export default function TopNavigation() {
           <Link
             href="/about"
             className={cn(
-              "inline-block transition-transform duration-600 ease-in-out",
-              pathname === "/" ? "translate-x-0" : "-translate-x-2",
+              "underline-animation relative inline-block transition-transform duration-600 ease-in-out after:bottom-[2.5px]!",
+              pathname === "/" || pathname === "/projects"
+                ? "translate-x-0"
+                : "-translate-x-2",
+              pathname === "/about" && "is-active",
             )}
           >
             About
