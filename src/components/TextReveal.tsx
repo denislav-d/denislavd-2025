@@ -10,7 +10,7 @@ gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export default function TextReveal({
   children,
-  animateOnScroll = true,
+  animateOnScroll = false,
   delay = 0,
 }: {
   children: React.ReactNode;
@@ -31,7 +31,7 @@ export default function TextReveal({
       lines.current = [];
 
       let elements = [];
-      if (containerRef.current.hasAttribute("data-copy-wrapper")) {
+      if (containerRef.current.hasAttribute("data-reveal-wrapper")) {
         elements = Array.from(containerRef.current.children);
       } else {
         elements = [containerRef.current];
@@ -118,7 +118,7 @@ export default function TextReveal({
   }
 
   return (
-    <div ref={containerRef} data-copy-wrapper="true">
+    <div ref={containerRef} data-reveal-wrapper="true">
       {children}
     </div>
   );
