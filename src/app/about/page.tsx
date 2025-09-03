@@ -1,92 +1,197 @@
 import TextReveal from "@/components/TextReveal";
 import Link from "next/link";
-import { slides } from "@/data/slides";
 
 export default function About() {
-  const gradientScheme =
-    slides[Math.floor(Math.random() * slides.length)].gradientScheme;
-
   return (
-    <main
-      className="relative h-dvh overflow-hidden"
-      style={{
-        background: `linear-gradient(to bottom, ${gradientScheme.from}, ${gradientScheme.via}, ${gradientScheme.to})`,
-      }}
-    >
-      <section className="font-plus-jakarta-sans grid grid-cols-1 gap-x-8 gap-y-10 px-4 pt-20 text-sm font-semibold tracking-[-0.01em] sm:grid-cols-2 lg:grid-cols-3 lg:pt-24">
-        <div className="grid grid-cols-3">
+    <main className="flex min-h-dvh flex-col">
+      <section className="font-eb-garamond flex flex-col gap-y-8 px-4 pt-30 text-lg leading-[1.1em] tracking-[-0.02em] sm:max-w-4/5 md:text-xl lg:text-2xl xl:text-3xl">
+        <TextReveal>
+          <p>
+            <span className="pl-8 sm:pl-16">Denislav Dimitrov</span> is a
+            Design-Driven Developer interested in ideas surrounding digital
+            identity, fashion, design principles, art, & artificial
+            intelligence. Currently pursuing a university degree in the
+            Netherlands and working at Gewest13.
+          </p>
+        </TextReveal>
+
+        <TextReveal delay={0.2}>
+          <p>
+            This is his minimal environment where he displays his creative
+            projects and contributions. A visionary in search of meaningful
+            innovation, emphasizing on distinctive visualisation.
+          </p>
+        </TextReveal>
+
+        <TextReveal delay={0.4}>
+          <p className="text-pretty">
+            As a person, he has always been impressed by good design -
+            regardless of whether it originates from a human or nature. The
+            creations which inspire you by observing their{" "}
+            <span>
+              <span className="inline text-zinc-500 blur-[0.8px]">(im)</span>
+              perfections
+            </span>
+            .
+          </p>
+        </TextReveal>
+      </section>
+
+      <section className="font-plus-jakarta-sans grid grid-cols-2 gap-y-8 px-4 py-20 text-xs font-semibold tracking-[-0.01em] sm:grid-cols-3 md:grid-cols-5 md:pt-32 lg:pt-40">
+        <div className="flex flex-col gap-y-8 lg:gap-y-12">
           <TextReveal delay={0.2}>
-            <h3 className="text-xs font-medium text-zinc-500">The person</h3>
+            <h4 className="text-zinc-500">Useful Links</h4>
           </TextReveal>
-          <TextReveal delay={0.3}>
-            <p className="col-span-2 text-balance">
-              Denislav Dimitrov is a Design-Driven Developer interested in ideas
-              surrounding digital identity, fashion, design principles, art, &
-              artificial intelligence. A visionary in search of meaningful
-              innovation, emphasizing on distinctive visualisation.
-            </p>
-          </TextReveal>
-        </div>
-
-        <div className="grid grid-cols-3">
-          <TextReveal delay={0.4}>
-            <h3 className="text-xs font-medium text-zinc-500">The vision</h3>
-          </TextReveal>
-          <TextReveal delay={0.5}>
-            <p className="col-span-2 text-balance">
-              This is my minimal environment where I display my creative
-              projects and contributions. As a person, I have always been
-              impressed by good design - regardless of whether it originates
-              from a human or nature. The creations which inspire you by
-              observing their{" "}
-              <span>
-                {" "}
-                <span className="inline text-zinc-500 blur-[0.8px]">(im)</span>
-                perfections
-              </span>
-              .
-            </p>
-          </TextReveal>
-        </div>
-
-        <div className="grid grid-cols-1 gap-x-8 gap-y-10 sm:col-span-2 sm:grid-cols-2 lg:col-span-1 lg:grid-cols-1">
-          <div className="grid grid-cols-3">
-            <TextReveal delay={0.6}>
-              <h3 className="text-xs font-medium text-zinc-500">The journey</h3>
-            </TextReveal>
-            <TextReveal delay={0.7}>
-              <p className="col-span-2 text-balance">
-                Currently pursuing a university degree in the Netherlands and
-                working at Gewest13.
-              </p>
-            </TextReveal>
-          </div>
-
-          <div className="grid grid-cols-3">
-            <TextReveal delay={0.8}>
-              <h3 className="text-xs font-medium text-zinc-500">The links</h3>
-            </TextReveal>
-            <div className="col-span-2 flex flex-col gap-2">
-              <TextReveal delay={0.9}>
-                <Link
-                  href="https://github.com/denislav-d"
-                  className="z-10 w-fit"
-                >
+          <ul>
+            <TextReveal delay={0.25}>
+              <li>
+                <Link href="https://github.com/denislav-d" target="_blank">
                   GitHub
                 </Link>
-              </TextReveal>
-              <TextReveal delay={1}>
+              </li>
+            </TextReveal>
+            <TextReveal delay={0.3}>
+              <li>
                 <Link
-                  href="https://www.linkedin.com/in/denislavd"
-                  className="z-10 w-fit"
+                  href="https://www.linkedin.com/in/denislavd/"
+                  target="_blank"
                 >
                   LinkedIn
                 </Link>
-              </TextReveal>
-            </div>
-          </div>
+              </li>
+            </TextReveal>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:gap-y-12">
+          <TextReveal delay={0.4}>
+            <h4 className="text-zinc-500">Tech Stack</h4>
+          </TextReveal>
+          <ul>
+            <TextReveal delay={0.45}>
+              <li>
+                <Link href="https://nextjs.org/" target="_blank">
+                  Next.js
+                </Link>
+              </li>
+            </TextReveal>
+            <TextReveal delay={0.5}>
+              <li>
+                <Link href="https://tailwindcss.com/" target="_blank">
+                  Tailwind CSS
+                </Link>
+              </li>
+            </TextReveal>
+            <TextReveal delay={0.55}>
+              <li>
+                <Link href="https://gsap.com/" target="_blank">
+                  GSAP
+                </Link>
+              </li>
+            </TextReveal>
+            <TextReveal delay={0.6}>
+              <li>
+                <Link href="https://threejs.org/" target="_blank">
+                  THREE.js
+                </Link>
+              </li>
+            </TextReveal>
+            <TextReveal delay={0.65}>
+              <li>
+                <Link
+                  href="https://lenis.darkroom.engineering/"
+                  target="_blank"
+                >
+                  Lenis
+                </Link>
+              </li>
+            </TextReveal>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:gap-y-12">
+          <TextReveal delay={0.6}>
+            <h4 className="text-zinc-500">Inspiration</h4>
+          </TextReveal>
+          <ul>
+            <TextReveal delay={0.7}>
+              <li>Swiss Design</li>
+            </TextReveal>
+            <TextReveal delay={0.8}>
+              <li>Archival Fashion</li>
+            </TextReveal>
+            <TextReveal delay={0.9}>
+              <li>Brutalist Architecture</li>
+            </TextReveal>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:gap-y-12">
+          <TextReveal delay={0.8}>
+            <h4 className="text-zinc-500">Typography</h4>
+          </TextReveal>
+          <ul>
+            <TextReveal delay={0.9}>
+              <li>
+                <Link
+                  href="https://fonts.google.com/specimen/Plus+Jakarta+Sans"
+                  target="_blank"
+                >
+                  Plus Jakarta Sans
+                </Link>
+              </li>
+            </TextReveal>
+
+            <TextReveal delay={1.0}>
+              <li>
+                <Link
+                  href="https://fonts.google.com/specimen/EB+Garamond"
+                  target="_blank"
+                >
+                  EB Garamond
+                </Link>
+              </li>
+            </TextReveal>
+          </ul>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:gap-y-12">
+          <TextReveal delay={1.0}>
+            <h4 className="text-zinc-500">Color Palette</h4>
+          </TextReveal>
+          <ul>
+            <TextReveal delay={1.1}>
+              <li>
+                Light:{" "}
+                <span className="border border-zinc-300 bg-[#f7f7f2]">
+                  #f7f7f2
+                </span>
+              </li>
+            </TextReveal>
+            <TextReveal delay={1.2}>
+              <li>
+                Dark:{" "}
+                <span className="text-light border border-zinc-300 bg-[#111111]">
+                  #111111
+                </span>
+              </li>
+            </TextReveal>
+            <TextReveal delay={1.3}>
+              <li>
+                Secondary:{" "}
+                <span className="border border-zinc-300 bg-[#afaba0]">
+                  #afaba0
+                </span>
+              </li>
+            </TextReveal>
+            {/* ! Add hover, too */}
+          </ul>
         </div>
       </section>
+
+      <footer className="font-plus-jakarta-sans mt-auto px-4 pb-4 text-[10px] font-semibold tracking-[-0.01em] text-zinc-400">
+        <h5>© 2025 Denislav Dimitrov</h5>
+      </footer>
     </main>
   );
 }
