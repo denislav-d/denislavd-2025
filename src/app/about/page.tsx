@@ -1,6 +1,8 @@
 import TextReveal from "@/components/TextReveal";
 import Link from "next/link";
 
+// !TODO Add and update hover colours, underline hover animations, .map() through data in data.ts about object
+
 export default function About() {
   return (
     <main className="flex min-h-dvh flex-col">
@@ -24,7 +26,7 @@ export default function About() {
         </TextReveal>
 
         <TextReveal delay={0.4}>
-          <p className="text-pretty">
+          <p>
             As a person, he has always been impressed by good design -
             regardless of whether it originates from a human or nature. The
             creations which inspire you by observing their{" "}
