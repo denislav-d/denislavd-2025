@@ -46,19 +46,12 @@ export default function TextReveal({
 
         splitRef.current?.push(split);
 
-        const computedStyle = window.getComputedStyle(element);
-        const textIndent = computedStyle.textIndent;
-
-        if (textIndent && textIndent !== "0px") {
-          if (split.lines.length > 0) {
-            (split.lines[0] as HTMLElement).style.paddingLeft = textIndent;
-          }
-          (element as HTMLElement).style.textIndent = "0";
-        }
-
         split.lines.forEach((line) => {
           const mask = document.createElement("div");
           mask.className = "overflow-hidden";
+          // Fix the overflow issue on long letters
+          mask.style.marginBottom = "-0.15em";
+          mask.style.paddingBottom = "0.15em";
 
           line.parentNode?.insertBefore(mask, line);
           mask.appendChild(line);
@@ -68,7 +61,7 @@ export default function TextReveal({
       });
 
       gsap.set(lines.current, {
-        y: "100%",
+        y: "115%",
       });
 
       const animationProps = {
@@ -111,8 +104,10 @@ export default function TextReveal({
       children as React.ReactElement,
       {
         ref: containerRef,
-        className:
-          `${((children as React.ReactElement).props as { className?: string }).className || ""} overflow-hidden`.trim(),
+        className: `${
+          ((children as React.ReactElement).props as { className?: string })
+            .className || ""
+        }`.trim(),
       } as React.RefAttributes<HTMLDivElement>,
     );
   }
