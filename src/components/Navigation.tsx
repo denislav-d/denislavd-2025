@@ -98,7 +98,7 @@ export default function Navigation() {
                 <Link
                   href="/projects"
                   className={cn(
-                    "underline-anim relative inline-block transition-all duration-600 ease-in-out",
+                    "underline-animation relative inline-block transition-all duration-600 ease-in-out",
                     pathname !== "/" && pathname !== "/projects"
                       ? "-translate-x-1 scale-95"
                       : "scale-100",
