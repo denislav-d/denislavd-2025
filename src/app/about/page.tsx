@@ -1,13 +1,13 @@
-import TextReveal from "@/components/TextReveal";
+import ElementReveal from "@/components/ElementReveal";
 import Link from "next/link";
 
-// !TODO Add and update hover colours, underline hover animations, .map() through data in data.ts about object
+// !TODO Add and update hover colours, underline hover animations, .map() through data in data.ts about object, colour palette copy functionality
 
 export default function About() {
   return (
     <main className="flex min-h-dvh flex-col">
       <section className="font-eb-garamond flex flex-col gap-y-8 px-4 pt-30 text-lg leading-[1.1em] tracking-[-0.02em] sm:max-w-4/5 md:text-xl lg:text-2xl xl:text-3xl">
-        <TextReveal>
+        <ElementReveal>
           <p>
             <span className="pl-8 sm:pl-16">Denislav Dimitrov</span> is a
             Design-Driven Developer interested in ideas surrounding digital
@@ -15,17 +15,17 @@ export default function About() {
             intelligence. Currently pursuing a university degree in the
             Netherlands and working at Gewest13.
           </p>
-        </TextReveal>
+        </ElementReveal>
 
-        <TextReveal delay={0.2}>
+        <ElementReveal delay={0.2}>
           <p>
             This is his minimal environment where he displays his creative
             projects and contributions. A visionary in search of meaningful
             innovation, emphasizing on distinctive visualisation.
           </p>
-        </TextReveal>
+        </ElementReveal>
 
-        <TextReveal delay={0.4}>
+        <ElementReveal delay={0.4}>
           <p>
             As a person, he has always been impressed by good design -
             regardless of whether it originates from a human or nature. The
@@ -36,23 +36,23 @@ export default function About() {
             </span>
             .
           </p>
-        </TextReveal>
+        </ElementReveal>
       </section>
 
       <section className="font-plus-jakarta-sans grid grid-cols-2 gap-y-8 px-4 py-20 text-xs font-semibold tracking-[-0.01em] sm:grid-cols-3 md:grid-cols-5 md:pt-32 lg:pt-40">
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
-          <TextReveal delay={0.2}>
+          <ElementReveal delay={0.2}>
             <h4 className="text-zinc-500">Useful Links</h4>
-          </TextReveal>
+          </ElementReveal>
           <ul>
-            <TextReveal delay={0.25}>
+            <ElementReveal delay={0.25}>
               <li>
                 <Link href="https://github.com/denislav-d" target="_blank">
                   GitHub
                 </Link>
               </li>
-            </TextReveal>
-            <TextReveal delay={0.3}>
+            </ElementReveal>
+            <ElementReveal delay={0.3}>
               <li>
                 <Link
                   href="https://www.linkedin.com/in/denislavd/"
@@ -61,44 +61,44 @@ export default function About() {
                   LinkedIn
                 </Link>
               </li>
-            </TextReveal>
+            </ElementReveal>
           </ul>
         </div>
 
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
-          <TextReveal delay={0.4}>
+          <ElementReveal delay={0.4}>
             <h4 className="text-zinc-500">Tech Stack</h4>
-          </TextReveal>
+          </ElementReveal>
           <ul>
-            <TextReveal delay={0.45}>
+            <ElementReveal delay={0.45}>
               <li>
                 <Link href="https://nextjs.org/" target="_blank">
                   Next.js
                 </Link>
               </li>
-            </TextReveal>
-            <TextReveal delay={0.5}>
+            </ElementReveal>
+            <ElementReveal delay={0.5}>
               <li>
                 <Link href="https://tailwindcss.com/" target="_blank">
                   Tailwind CSS
                 </Link>
               </li>
-            </TextReveal>
-            <TextReveal delay={0.55}>
+            </ElementReveal>
+            <ElementReveal delay={0.55}>
               <li>
                 <Link href="https://gsap.com/" target="_blank">
                   GSAP
                 </Link>
               </li>
-            </TextReveal>
-            <TextReveal delay={0.6}>
+            </ElementReveal>
+            <ElementReveal delay={0.6}>
               <li>
                 <Link href="https://threejs.org/" target="_blank">
                   THREE.js
                 </Link>
               </li>
-            </TextReveal>
-            <TextReveal delay={0.65}>
+            </ElementReveal>
+            <ElementReveal delay={0.65}>
               <li>
                 <Link
                   href="https://lenis.darkroom.engineering/"
@@ -107,33 +107,33 @@ export default function About() {
                   Lenis
                 </Link>
               </li>
-            </TextReveal>
+            </ElementReveal>
           </ul>
         </div>
 
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
-          <TextReveal delay={0.6}>
+          <ElementReveal delay={0.6}>
             <h4 className="text-zinc-500">Inspiration</h4>
-          </TextReveal>
+          </ElementReveal>
           <ul>
-            <TextReveal delay={0.7}>
+            <ElementReveal delay={0.7}>
               <li>Swiss Design</li>
-            </TextReveal>
-            <TextReveal delay={0.8}>
+            </ElementReveal>
+            <ElementReveal delay={0.8}>
               <li>Archival Fashion</li>
-            </TextReveal>
-            <TextReveal delay={0.9}>
+            </ElementReveal>
+            <ElementReveal delay={0.9}>
               <li>Brutalist Architecture</li>
-            </TextReveal>
+            </ElementReveal>
           </ul>
         </div>
 
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
-          <TextReveal delay={0.8}>
+          <ElementReveal delay={0.8}>
             <h4 className="text-zinc-500">Typography</h4>
-          </TextReveal>
+          </ElementReveal>
           <ul>
-            <TextReveal delay={0.9}>
+            <ElementReveal delay={0.9}>
               <li>
                 <Link
                   href="https://fonts.google.com/specimen/Plus+Jakarta+Sans"
@@ -142,9 +142,9 @@ export default function About() {
                   Plus Jakarta Sans
                 </Link>
               </li>
-            </TextReveal>
+            </ElementReveal>
 
-            <TextReveal delay={1.0}>
+            <ElementReveal delay={1.0}>
               <li>
                 <Link
                   href="https://fonts.google.com/specimen/EB+Garamond"
@@ -153,39 +153,39 @@ export default function About() {
                   EB Garamond
                 </Link>
               </li>
-            </TextReveal>
+            </ElementReveal>
           </ul>
         </div>
 
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
-          <TextReveal delay={1.0}>
+          <ElementReveal delay={1.0}>
             <h4 className="text-zinc-500">Color Palette</h4>
-          </TextReveal>
+          </ElementReveal>
           <ul>
-            <TextReveal delay={1.1}>
+            <ElementReveal delay={1.1}>
               <li>
                 Light:{" "}
                 <span className="border border-zinc-300 bg-[#f7f7f2]">
                   #f7f7f2
                 </span>
               </li>
-            </TextReveal>
-            <TextReveal delay={1.2}>
+            </ElementReveal>
+            <ElementReveal delay={1.2}>
               <li>
                 Dark:{" "}
                 <span className="text-light border border-zinc-300 bg-[#111111]">
                   #111111
                 </span>
               </li>
-            </TextReveal>
-            <TextReveal delay={1.3}>
+            </ElementReveal>
+            <ElementReveal delay={1.3}>
               <li>
                 Secondary:{" "}
                 <span className="border border-zinc-300 bg-[#afaba0]">
                   #afaba0
                 </span>
               </li>
-            </TextReveal>
+            </ElementReveal>
             {/* ! Add hover, too */}
           </ul>
         </div>

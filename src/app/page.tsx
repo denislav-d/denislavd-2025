@@ -12,7 +12,7 @@ import {
   Mesh,
   ShaderMaterial,
 } from "three";
-import { vertexShader, fragmentShader } from "@/utils/shaders";
+import { vertexShaderSlider, fragmentShaderSlider } from "@/utils/shaders";
 import Minimap from "@/components/Minimap";
 import Link from "next/link";
 import { slides } from "@/data/slides";
@@ -114,7 +114,6 @@ export default function Slider() {
     renderer.setClearColor(0x000000, 0);
     container.appendChild(renderer.domElement);
 
-    // Store in ref for cleanup
     sceneRef.current = { scene, camera, renderer };
 
     const calculatePlaneDimensions = () => {
@@ -200,8 +199,8 @@ export default function Slider() {
     );
 
     const material = new ShaderMaterial({
-      vertexShader,
-      fragmentShader,
+      vertexShader: vertexShaderSlider,
+      fragmentShader: fragmentShaderSlider,
       side: DoubleSide,
       uniforms: {
         uScrollIntensity: { value: scrollIntensity },
@@ -748,10 +747,9 @@ export default function Slider() {
 
   return (
     <div
-      className="slider-page relative grid max-h-dvh w-screen overflow-hidden transition-all duration-300 ease-out"
+      className="slider-page relative grid max-h-dvh min-h-dvh w-screen overflow-hidden transition-all duration-300 ease-out"
       style={{
-        background: `linear-gradient(to bottom, ${currentGradient.from}, ${currentGradient.via} 70%, ${currentGradient.to})`,
-        minHeight: "100dvh",
+        background: `linear-gradient(to bottom, ${currentGradient.from} 75%, ${currentGradient.via} 90%, ${currentGradient.to} 100%)`,
       }}
     >
       <section className="grid-area relative flex w-full items-center justify-center">

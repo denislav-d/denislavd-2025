@@ -6,6 +6,8 @@ import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
+// ! Fix this with different markdown structures
+
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export default function ElementReveal({

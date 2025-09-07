@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { cn } from "@/utils/utils";
-import TextReveal from "@/components/TextReveal";
+import ElementReveal from "@/components/ElementReveal";
 
 export default function Navigation() {
   const pathname = usePathname();
@@ -19,14 +19,14 @@ export default function Navigation() {
 
   return (
     <nav className="font-plus-jakarta-sans fixed top-4 z-50 flex w-full justify-between px-4 text-xs leading-tight font-semibold tracking-[-0.01em] text-white mix-blend-difference sm:grid sm:grid-cols-2 md:grid-cols-3">
-      <TextReveal delay={0.1}>
+      <ElementReveal delay={0.1}>
         <Link href="/" className="w-fit">
           Denislav <span className="xs:inline-block hidden">Dimitrov</span>
         </Link>
-      </TextReveal>
+      </ElementReveal>
 
       <div className="flex justify-end gap-x-4 md:justify-center">
-        <TextReveal delay={0.1}>
+        <ElementReveal delay={0.1}>
           <Link
             href="/thoughts"
             className={cn(
@@ -39,12 +39,12 @@ export default function Navigation() {
           >
             Thoughts
           </Link>
-        </TextReveal>
+        </ElementReveal>
 
         <div className="relative grid overflow-hidden">
           {/* Projects Link */}
           <div className="grid-area origin-[50%_50%_0]">
-            <TextReveal delay={0.12}>
+            <ElementReveal delay={0.12}>
               <Link
                 href="/"
                 className={cn(
@@ -56,7 +56,7 @@ export default function Navigation() {
               >
                 Projects
               </Link>
-            </TextReveal>
+            </ElementReveal>
           </div>
 
           <div className="grid-area origin-[50%_50%_0]">
@@ -68,7 +68,7 @@ export default function Navigation() {
                   : "pointer-events-none -translate-y-full scale-95",
               )}
             >
-              <TextReveal delay={0.14}>
+              <ElementReveal delay={0.14}>
                 <Link
                   href="/"
                   className={cn(
@@ -81,8 +81,8 @@ export default function Navigation() {
                 >
                   Slider
                 </Link>
-              </TextReveal>{" "}
-              <TextReveal delay={0.16}>
+              </ElementReveal>{" "}
+              <ElementReveal delay={0.16}>
                 <span
                   className={cn(
                     "inline-block transition-all duration-600 ease-in-out",
@@ -93,8 +93,8 @@ export default function Navigation() {
                 >
                   /
                 </span>
-              </TextReveal>{" "}
-              <TextReveal delay={0.18}>
+              </ElementReveal>{" "}
+              <ElementReveal delay={0.18}>
                 <Link
                   href="/projects"
                   className={cn(
@@ -107,12 +107,12 @@ export default function Navigation() {
                 >
                   Grid
                 </Link>
-              </TextReveal>
+              </ElementReveal>
             </span>
           </div>
         </div>
 
-        <TextReveal delay={0.2}>
+        <ElementReveal delay={0.2}>
           <Link
             href="/about"
             className={cn(
@@ -125,14 +125,14 @@ export default function Navigation() {
           >
             About
           </Link>
-        </TextReveal>
+        </ElementReveal>
       </div>
 
-      <TextReveal delay={0.4}>
+      <ElementReveal delay={0.4}>
         <span className="hidden text-right md:block">
           Design-Driven Developer
         </span>
-      </TextReveal>
+      </ElementReveal>
     </nav>
   );
 }

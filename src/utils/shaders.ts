@@ -1,4 +1,4 @@
-export const vertexShader = `
+export const vertexShaderSlider = `
    uniform float uScrollIntensity;
    varying vec2 vUv;
 
@@ -14,7 +14,7 @@ export const vertexShader = `
       }
 `;
 
-export const fragmentShader = `
+export const fragmentShaderSlider = `
     uniform sampler2D uCurrentTexture;
     uniform sampler2D uNextTexture;
     uniform float uScrollPosition;
