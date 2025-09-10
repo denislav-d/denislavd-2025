@@ -35,7 +35,7 @@ export default async function Project({ params }: ProjectPageProps) {
         title={project.title}
         description={project.description}
         metadata={project.metadata}
-        heroImage={project.heroImage}
+        hero={project.hero}
       />
 
       {project.content.blocks.map((block, index) => (

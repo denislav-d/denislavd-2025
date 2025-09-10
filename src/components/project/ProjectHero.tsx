@@ -1,18 +1,19 @@
 import ElementReveal from "@/components/ElementReveal";
 import ProjectMetadata from "@/components/project/ProjectMetadata";
 import { Project } from "@/data/slides";
+import { cn } from "@/utils/utils";
 import Image from "next/image";
 
 export default function ProjectHero({
   title,
   description,
   metadata,
-  heroImage,
+  hero,
 }: {
   title: Project["title"];
   description: Project["description"];
   metadata: Project["metadata"];
-  heroImage: Project["heroImage"];
+  hero: Project["hero"];
 }) {
   return (
     <section className="mx-auto flex w-full max-w-prose flex-col gap-y-16 pt-30 pb-8 max-md:px-4">
@@ -32,12 +33,17 @@ export default function ProjectHero({
 
       <ProjectMetadata metadata={metadata} />
 
-      <figure className="relative aspect-[16/10]">
+      <figure
+        className={cn(
+          "relative select-none",
+          hero.orientation === "portrait" ? "aspect-[0.8/1]" : "aspect-[16/10]",
+        )}
+      >
         <ElementReveal animateOnScroll>
           <Image
             fill
-            src={heroImage}
-            alt={title}
+            src={hero.image}
+            alt={hero.alt || title}
             className="w-full object-cover"
           />
         </ElementReveal>
