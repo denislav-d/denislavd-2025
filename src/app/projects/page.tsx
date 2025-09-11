@@ -68,6 +68,30 @@ export default function Projects() {
     const baseLag = 0.1;
     const lagIncrement = 0.2;
 
+    // Initial appear animation
+    const animateInitialAppear = () => {
+      const items = grid.querySelectorAll(".grid__item");
+
+      gsap.set(items, {
+        opacity: 0,
+        scale: 0.9,
+        y: 50,
+      });
+
+      gsap.to(items, {
+        opacity: 1,
+        scale: 1,
+        y: 0,
+        duration: 1.5,
+        ease: "power4.out",
+        stagger: {
+          amount: 1.2,
+          from: "start",
+        },
+        delay: 0.5,
+      });
+    };
+
     const getColumnCount = (): number => {
       const styles = getComputedStyle(grid);
       const templateColumns = styles.getPropertyValue("grid-template-columns");
@@ -118,6 +142,7 @@ export default function Projects() {
         });
 
         applyDirectLagEffects(smoother);
+        animateInitialAppear();
         isInitializedRef.current = true;
       } catch {
         isInitializedRef.current = false;
@@ -166,7 +191,7 @@ export default function Projects() {
         <main className="px-4 pt-30 lg:px-16">
           <div
             ref={gridRef}
-            className="grid grid-cols-3 gap-x-10 gap-y-16 lg:grid-cols-5 lg:gap-x-32"
+            className="grid grid-cols-3 gap-x-10 gap-y-16 sm:grid-cols-4 lg:grid-cols-5 lg:gap-x-32"
           >
             {projects.map((item) => {
               // Render placeholder items
@@ -174,7 +199,7 @@ export default function Projects() {
                 return (
                   <div
                     key={item.id}
-                    className="grid__item flex flex-col gap-y-2"
+                    className="grid__item flex flex-col gap-y-2 opacity-0"
                   >
                     <figure className="relative aspect-[0.8/1] bg-zinc-400/20 blur-sm" />
                     <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
@@ -190,19 +215,19 @@ export default function Projects() {
                 <Link
                   key={project.id}
                   href={`/${project.slug}`}
-                  className="grid__item group flex flex-col gap-y-2"
+                  className="grid__item group group flex flex-col gap-y-2 opacity-0"
                 >
-                  <figure className="relative aspect-[0.8/1]">
+                  <figure className="relative aspect-[1.1/1.51] transition-transform duration-500 group-hover:scale-95">
                     <Image
-                      src={project.heroImage}
+                      src={project.slide.image}
                       alt={project.title}
                       fill
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
+                      className="object-cover"
                       sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
                       priority={projects.indexOf(project) < 15}
                     />
                   </figure>
-                  <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
+                  <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em] transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-95">
                     {project.title}
                   </h4>
                 </Link>
