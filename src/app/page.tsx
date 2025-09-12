@@ -17,6 +17,7 @@ import Minimap from "@/components/Minimap";
 import Link from "next/link";
 import { slides } from "@/data/slides";
 import { getInterpolatedGradient } from "@/utils/gradients";
+import { useGradient } from "@/providers/GradientContext";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
@@ -30,6 +31,7 @@ CustomEase.create("text", "0.5, 1, 0.89, 1");
 // ! TODO: pixels between images in the slider
 
 export default function Slider() {
+  const { isGradientEnabled } = useGradient();
   const containerRef = useRef<HTMLDivElement>(null);
   const projectTitleRef = useRef<HTMLHeadingElement>(null);
   const projectSubtitleRef = useRef<HTMLHeadingElement>(null);
@@ -746,13 +748,15 @@ export default function Slider() {
   };
 
   return (
-    <div
-      className="slider-page relative grid max-h-dvh min-h-dvh w-screen overflow-hidden transition-all duration-300 ease-out"
-      style={{
-        background: `linear-gradient(to bottom, ${currentGradient.from} 75%, ${currentGradient.via} 90%, ${currentGradient.to} 100%)`,
-      }}
-    >
-      <section className="grid-area relative flex w-full items-center justify-center">
+    <div className="slider-page relative grid max-h-dvh min-h-dvh w-screen overflow-hidden bg-white">
+      <div
+        className="absolute inset-0 transition-opacity duration-1000 ease-out"
+        style={{
+          background: `linear-gradient(to bottom, ${currentGradient.from} 75%, ${currentGradient.via} 90%, ${currentGradient.to} 100%)`,
+          opacity: isGradientEnabled ? 1 : 0,
+        }}
+      />
+      <section className="grid-area relative z-10 flex w-full items-center justify-center">
         <div
           id="container"
           ref={containerRef}
@@ -775,7 +779,7 @@ export default function Slider() {
       </section>
 
       <section
-        className="pointer-events-none absolute flex flex-col justify-start max-sm:-ml-8"
+        className="pointer-events-none absolute z-10 flex flex-col justify-start max-sm:-ml-8"
         style={{
           top: `calc(50% + ${planeDimensions.height / 2}px + 10px)`,
           left: `calc(50% - ${planeDimensions.width / 2}px)`,
@@ -786,7 +790,7 @@ export default function Slider() {
           <h2
             id="project-title"
             ref={projectTitleRef}
-            className="text-light font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] opacity-0 mix-blend-difference will-change-transform backface-hidden"
+            className="text-dark font-plus-jakarta-sans relative text-sm font-semibold tracking-[-0.03em] opacity-0 mix-blend-difference will-change-transform backface-hidden"
           ></h2>
         </div>
         <div className="mt-0.5 overflow-hidden">

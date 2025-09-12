@@ -3,6 +3,7 @@ import { EB_Garamond, Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import Navigation from "@/components/Navigation";
 import SmoothScroll from "@/components/SmoothScroll";
+import { GradientProvider } from "@/providers/GradientContext";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -33,8 +34,10 @@ export default function RootLayout({
       <body
         className={`${plusJakartaSans.variable} ${ebGaramond.variable} bg-light text-dark preload antialiased`}
       >
-        <Navigation />
-        <SmoothScroll>{children}</SmoothScroll>
+        <GradientProvider>
+          <Navigation />
+          <SmoothScroll>{children}</SmoothScroll>
+        </GradientProvider>
       </body>
     </html>
   );

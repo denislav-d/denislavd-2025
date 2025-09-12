@@ -5,9 +5,11 @@ import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { cn } from "@/utils/utils";
 import ElementReveal from "@/components/ElementReveal";
+import { useGradient } from "@/providers/GradientContext";
 
 export default function Navigation() {
   const pathname = usePathname();
+  const { isGradientEnabled, toggleGradient } = useGradient();
 
   // Remove preload class after component mounts to enable transitions
   useEffect(() => {
@@ -26,25 +28,62 @@ export default function Navigation() {
       </ElementReveal>
 
       <div className="flex justify-end gap-x-4 md:justify-center">
-        <ElementReveal delay={0.1}>
-          <Link
-            href="/thoughts"
-            className={cn(
-              "underline-animation relative inline-block transition-transform duration-600 ease-in-out after:bottom-[2.5px]!",
-              pathname === "/" || pathname === "/projects"
-                ? "translate-x-0"
-                : "translate-x-2",
-              pathname?.startsWith("/thoughts") && "is-active",
-            )}
-          >
-            Thoughts
-          </Link>
-        </ElementReveal>
+        <div
+          className={cn(
+            "relative grid overflow-hidden transition-all duration-600",
+            pathname === "/" || pathname === "/projects"
+              ? "translate-x-0"
+              : "translate-x-2",
+            pathname !== "/" && "opacity-50",
+          )}
+        >
+          {/* Default Gradient Link */}
+          <div className="grid-area origin-[50%_50%_0]">
+            <ElementReveal delay={0.1}>
+              <button
+                onClick={toggleGradient}
+                className={cn(
+                  "inline-block w-full cursor-pointer transition-all duration-600 ease-in-out disabled:cursor-not-allowed",
+                  isGradientEnabled
+                    ? "pointer-events-none translate-y-full scale-95"
+                    : "translate-y-0 scale-100",
+                )}
+                disabled={pathname !== "/"}
+              >
+                Gradient
+              </button>
+            </ElementReveal>
+          </div>
+
+          <div className="grid-area origin-[50%_50%_0]">
+            <span
+              className={cn(
+                "inline-block w-full text-right transition-all duration-600 ease-in-out",
+                isGradientEnabled
+                  ? "translate-y-0 scale-100"
+                  : "pointer-events-none -translate-y-full scale-95",
+              )}
+            >
+              <ElementReveal delay={0.12}>
+                <button
+                  onClick={toggleGradient}
+                  className={cn(
+                    "relative inline-block cursor-pointer transition-all duration-600 ease-in-out disabled:cursor-not-allowed",
+                    !isGradientEnabled ? "translate-x-0 scale-95" : "scale-100",
+                  )}
+                  disabled={pathname !== "/"}
+                >
+                  Plain
+                </button>
+              </ElementReveal>
+            </span>
+          </div>
+        </div>
 
         <div className="relative grid overflow-hidden">
           {/* Projects Link */}
           <div className="grid-area origin-[50%_50%_0]">
-            <ElementReveal delay={0.12}>
+            <ElementReveal delay={0.14}>
               <Link
                 href="/"
                 className={cn(
@@ -68,7 +107,7 @@ export default function Navigation() {
                   : "pointer-events-none -translate-y-full scale-95",
               )}
             >
-              <ElementReveal delay={0.14}>
+              <ElementReveal delay={0.16}>
                 <Link
                   href="/"
                   className={cn(
@@ -82,7 +121,7 @@ export default function Navigation() {
                   Slider
                 </Link>
               </ElementReveal>{" "}
-              <ElementReveal delay={0.16}>
+              <ElementReveal delay={0.18}>
                 <span
                   className={cn(
                     "inline-block transition-all duration-600 ease-in-out",
@@ -94,7 +133,7 @@ export default function Navigation() {
                   /
                 </span>
               </ElementReveal>{" "}
-              <ElementReveal delay={0.18}>
+              <ElementReveal delay={0.2}>
                 <Link
                   href="/projects"
                   className={cn(
@@ -112,7 +151,7 @@ export default function Navigation() {
           </div>
         </div>
 
-        <ElementReveal delay={0.2}>
+        <ElementReveal delay={0.22}>
           <Link
             href="/about"
             className={cn(
