@@ -10,7 +10,7 @@ interface Slide {
 
 interface ContentBlock {
   type: "text" | "image" | "video" | "gallery";
-  orientation?: "portrait" | "landscape";
+  orientation?: "portrait" | "landscape" | "poster";
   content?: string;
   src?: string;
   images?: string[];
@@ -37,7 +37,6 @@ interface Project {
   content: {
     blocks: ContentBlock[];
   };
-  gradientScheme: GradientScheme;
   slide: Slide;
 }
 
@@ -113,7 +112,7 @@ export const projects: Project[] = [
           type: "image",
           src: "/images/ddw.png",
           alt: "Poster",
-          orientation: "portrait",
+          orientation: "poster",
         },
         {
           type: "text",
@@ -125,11 +124,6 @@ export const projects: Project[] = [
           src: "/images/ddw/InnovationsInsightDemoVideo.MOV",
         },
       ],
-    },
-    gradientScheme: {
-      from: "rgb(245, 245, 245)",
-      via: "rgba(251, 146, 60, 0.3)",
-      to: "rgba(236, 72, 153, 0.3)",
     },
     slide: {
       image: "/images/ddw.png",
@@ -150,7 +144,7 @@ export const projects: Project[] = [
     description:
       "Detaile explores the idea of a stylist application that generates personalized outfit recommendations powered by Artificial Intelligence which are adjusted to the user's personal style, preferences, and location.",
     metadata: {
-      year: "2024",
+      year: "2025",
       category: "Native iOS Application",
       technologies: ["SwiftUI", "AI", "OpenAI API", "CoreML"],
       role: "Mobile Developer",
@@ -205,9 +199,9 @@ export const projects: Project[] = [
         },
         {
           type: "image",
-          src: "/images/detaile.png",
+          src: "/images/detaile/detaile-poster.png",
           alt: "Poster",
-          orientation: "portrait",
+          orientation: "poster",
         },
         {
           type: "text",
@@ -223,11 +217,6 @@ export const projects: Project[] = [
           ],
         },
       ],
-    },
-    gradientScheme: {
-      from: "rgb(245, 245, 245)",
-      via: "rgb(228, 228, 231)",
-      to: "rgb(214, 211, 209)",
     },
     slide: {
       image: "/images/detaile.png",
@@ -253,7 +242,7 @@ export const projects: Project[] = [
       technologies: [
         "Next.js",
         "Spotify API",
-        "SASS",
+        "SCSS",
         "Recommendation Algorithm",
       ],
       role: "Frontend Developer",
@@ -271,11 +260,6 @@ export const projects: Project[] = [
         },
       ],
     },
-    gradientScheme: {
-      from: "rgb(245, 245, 245)",
-      via: "rgba(186, 230, 253, 0.5)",
-      to: "rgba(147, 197, 253, 0.5)",
-    },
     slide: {
       image: "/images/spotlight.png",
       url: "/spotlight",
@@ -283,8 +267,8 @@ export const projects: Project[] = [
       subtitle: "Event Recommendations",
       gradientScheme: {
         from: "rgb(245, 245, 245)",
-        via: "rgba(186, 230, 253, 0.5)",
-        to: "rgba(147, 197, 253, 0.5)",
+        via: "rgba(177, 151, 250, 0.3)",
+        to: "rgba(109, 57, 255, 0.3)",
       },
     },
   },
@@ -321,11 +305,6 @@ export const projects: Project[] = [
         },
       ],
     },
-    gradientScheme: {
-      from: "rgb(245, 245, 245)",
-      via: "rgba(186, 230, 253, 0.5)",
-      to: "rgba(147, 197, 253, 0.5)",
-    },
     slide: {
       image: "/images/strijp-s-ai-assistant.png",
       url: "/strijp-s-ai-assistant",
@@ -345,7 +324,7 @@ export const projects: Project[] = [
     description:
       "Sustainable fashion platform promoting thoughtful consumption and ethical fashion choices.",
     metadata: {
-      year: "2023",
+      year: "2024",
       category: "E-commerce Platform",
       technologies: ["Next.js", "SASS", "Python"],
       role: "Frontend Developer",
@@ -362,11 +341,6 @@ export const projects: Project[] = [
             "Vetemòre is a sustainable fashion platform that promotes thoughtful consumption and connects consumers with ethical fashion brands.",
         },
       ],
-    },
-    gradientScheme: {
-      from: "rgb(245, 245, 245)",
-      via: "rgb(255, 230, 233, 0.3)",
-      to: "rgba(254, 215, 170, 0.4)",
     },
     slide: {
       image: "/images/vetemore.png",
@@ -387,9 +361,9 @@ export const projects: Project[] = [
   //   description:
   //     "Medify is a platform that.",
   //   metadata: {
-  //     year: "2023",
+  //     year: "2024",
   //     category: "E-commerce Platform",
-  //     technologies: ["Next.js", "SASS", "Python"],
+  //     technologies: ["Next.js", "Tailwind CSS", "Supabase"],
   //     role: "Frontend Developer",
   //   },
   //   hero: {
