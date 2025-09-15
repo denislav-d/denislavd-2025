@@ -14,10 +14,12 @@ export default function ElementReveal({
   children,
   animateOnScroll = false,
   delay = 0,
+  linesClass,
 }: {
   children: React.ReactNode;
   animateOnScroll?: boolean;
   delay?: number;
+  linesClass?: string;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const elementRef = useRef<HTMLDivElement[]>([]);
@@ -58,6 +60,13 @@ export default function ElementReveal({
           splitRef.current?.push(split);
 
           split.lines.forEach((line) => {
+            if (linesClass && linesClass.trim().length > 0) {
+              // Apply provided classes to each created line so styles persist
+              linesClass
+                .trim()
+                .split(/\s+/)
+                .forEach((cls) => line.classList.add(cls as string));
+            }
             const mask = document.createElement("div");
             mask.className = "overflow-hidden";
             // Fix the overflow issue on long letters
