@@ -6,8 +6,6 @@ import { SplitText } from "gsap/SplitText";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 
-// ! Fix this with different markdown structures
-
 gsap.registerPlugin(SplitText, ScrollTrigger);
 
 export default function ElementReveal({
@@ -57,6 +55,11 @@ export default function ElementReveal({
             type: "lines",
           });
 
+          // Skip if no lines were created
+          if (!split.lines || split.lines.length === 0) {
+            return;
+          }
+
           splitRef.current?.push(split);
 
           split.lines.forEach((line) => {
@@ -81,14 +84,18 @@ export default function ElementReveal({
         }
       });
 
-      gsap.set(lines.current, {
-        y: "115%",
-      });
+      if (lines.current.length > 0) {
+        gsap.set(lines.current, {
+          y: "115%",
+        });
+      }
 
-      gsap.set(mediaElements.current, {
-        opacity: 0,
-        scale: 0.95,
-      });
+      if (mediaElements.current.length > 0) {
+        gsap.set(mediaElements.current, {
+          opacity: 0,
+          scale: 0.95,
+        });
+      }
 
       const textAnimationProps = {
         y: "0%",
@@ -139,11 +146,20 @@ export default function ElementReveal({
       }
 
       return () => {
-        splitRef.current?.forEach((split) => {
-          if (split) {
-            split.revert();
-          }
-        });
+        try {
+          splitRef.current?.forEach((split) => {
+            if (split && typeof split.revert === "function") {
+              split.revert();
+            }
+          });
+          // Clear refs to prevent stale references
+          splitRef.current = [];
+          elementRef.current = [];
+          lines.current = [];
+          mediaElements.current = [];
+        } catch (error) {
+          console.warn("Error cleaning up ElementReveal:", error);
+        }
       };
     },
     {
@@ -152,17 +168,13 @@ export default function ElementReveal({
     },
   );
 
-  if (React.Children.count(children) === 1) {
-    return React.cloneElement(
-      children as React.ReactElement,
-      {
-        ref: containerRef,
-        className: `${
-          ((children as React.ReactElement).props as { className?: string })
-            .className || ""
-        }`.trim(),
-      } as React.RefAttributes<HTMLDivElement>,
-    );
+  if (React.Children.count(children) === 1 && React.isValidElement(children)) {
+    const existingClassName =
+      (children.props as { className?: string })?.className || "";
+    return React.cloneElement(children, {
+      ref: containerRef,
+      className: existingClassName.trim(),
+    } as React.RefAttributes<HTMLDivElement>);
   }
 
   return (

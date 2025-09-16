@@ -43,7 +43,7 @@ export default function RendererMDX({
     a: ({ children, href }) => (
       <Link
         href={href || "#"}
-        className="font-plus-jakarta-sans text-sm font-semibold tracking-[-0.01em] text-zinc-600 underline transition-colors hover:text-zinc-900"
+        className="font-plus-jakarta-sans text-sm font-semibold tracking-[-0.01em] underline transition-opacity duration-400 hover:opacity-50"
         target="_blank"
       >
         {children}
