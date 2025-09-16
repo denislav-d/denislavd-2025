@@ -1,7 +1,7 @@
 import ElementReveal from "@/components/ElementReveal";
 import Link from "next/link";
-
-// !TODO Add and update hover colours, underline hover animations, .map() through data in data.ts about object, colour palette copy functionality
+import { aboutData } from "@/data/about";
+import { cn } from "@/utils/utils";
 
 export default function About() {
   return (
@@ -45,23 +45,19 @@ export default function About() {
             <h4 className="text-zinc-500">Useful Links</h4>
           </ElementReveal>
           <ul>
-            <ElementReveal delay={0.25}>
-              <li>
-                <Link href="https://github.com/denislav-d" target="_blank">
-                  GitHub
-                </Link>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={0.3}>
-              <li>
-                <Link
-                  href="https://www.linkedin.com/in/denislavd/"
-                  target="_blank"
-                >
-                  LinkedIn
-                </Link>
-              </li>
-            </ElementReveal>
+            {aboutData.sections.usefulLinks.map((link, i) => (
+              <ElementReveal key={link.label} delay={0.25 + i * 0.05}>
+                <li>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    className="transition-opacity duration-400 hover:opacity-50"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              </ElementReveal>
+            ))}
           </ul>
         </div>
 
@@ -70,44 +66,19 @@ export default function About() {
             <h4 className="text-zinc-500">Tech Stack</h4>
           </ElementReveal>
           <ul>
-            <ElementReveal delay={0.45}>
-              <li>
-                <Link href="https://nextjs.org/" target="_blank">
-                  Next.js
-                </Link>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={0.5}>
-              <li>
-                <Link href="https://tailwindcss.com/" target="_blank">
-                  Tailwind CSS
-                </Link>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={0.55}>
-              <li>
-                <Link href="https://gsap.com/" target="_blank">
-                  GSAP
-                </Link>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={0.6}>
-              <li>
-                <Link href="https://threejs.org/" target="_blank">
-                  THREE.js
-                </Link>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={0.65}>
-              <li>
-                <Link
-                  href="https://lenis.darkroom.engineering/"
-                  target="_blank"
-                >
-                  Lenis
-                </Link>
-              </li>
-            </ElementReveal>
+            {aboutData.sections.techStack.map((link, i) => (
+              <ElementReveal key={link.label} delay={0.45 + i * 0.05}>
+                <li>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    className="transition-opacity duration-400 hover:opacity-50"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              </ElementReveal>
+            ))}
           </ul>
         </div>
 
@@ -116,15 +87,11 @@ export default function About() {
             <h4 className="text-zinc-500">Inspiration</h4>
           </ElementReveal>
           <ul>
-            <ElementReveal delay={0.7}>
-              <li>Swiss Design</li>
-            </ElementReveal>
-            <ElementReveal delay={0.8}>
-              <li>Archival Fashion</li>
-            </ElementReveal>
-            <ElementReveal delay={0.9}>
-              <li>Brutalist Architecture</li>
-            </ElementReveal>
+            {aboutData.sections.inspiration.map((item, i) => (
+              <ElementReveal key={item} delay={0.7 + i * 0.1}>
+                <li>{item}</li>
+              </ElementReveal>
+            ))}
           </ul>
         </div>
 
@@ -133,27 +100,19 @@ export default function About() {
             <h4 className="text-zinc-500">Typography</h4>
           </ElementReveal>
           <ul>
-            <ElementReveal delay={0.9}>
-              <li>
-                <Link
-                  href="https://fonts.google.com/specimen/Plus+Jakarta+Sans"
-                  target="_blank"
-                >
-                  Plus Jakarta Sans
-                </Link>
-              </li>
-            </ElementReveal>
-
-            <ElementReveal delay={1.0}>
-              <li>
-                <Link
-                  href="https://fonts.google.com/specimen/EB+Garamond"
-                  target="_blank"
-                >
-                  EB Garamond
-                </Link>
-              </li>
-            </ElementReveal>
+            {aboutData.sections.typography.map((link, i) => (
+              <ElementReveal key={link.label} delay={0.9 + i * 0.1}>
+                <li>
+                  <Link
+                    href={link.href}
+                    target="_blank"
+                    className="transition-opacity duration-400 hover:opacity-50"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              </ElementReveal>
+            ))}
           </ul>
         </div>
 
@@ -162,37 +121,32 @@ export default function About() {
             <h4 className="text-zinc-500">Color Palette</h4>
           </ElementReveal>
           <ul>
-            <ElementReveal delay={1.1}>
-              <li>
-                Light:{" "}
-                <span className="border border-zinc-300 bg-[#f7f7f2]">
-                  #f7f7f2
-                </span>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={1.2}>
-              <li>
-                Dark:{" "}
-                <span className="text-light border border-zinc-300 bg-[#111111]">
-                  #111111
-                </span>
-              </li>
-            </ElementReveal>
-            <ElementReveal delay={1.3}>
-              <li>
-                Secondary:{" "}
-                <span className="border border-zinc-300 bg-[#afaba0]">
-                  #afaba0
-                </span>
-              </li>
-            </ElementReveal>
-            {/* ! Add hover, too */}
+            {aboutData.sections.colorPalette.map((c, i) => (
+              <ElementReveal
+                key={c.label}
+                delay={1.1 + i * 0.1}
+                linesClass="leading-[1.5]"
+              >
+                <li>
+                  {c.label}:{" "}
+                  <span
+                    className={cn(
+                      "text-light border border-zinc-300",
+                      c.hex.toLowerCase() === "#f7f7f2" && "text-dark",
+                    )}
+                    style={{ backgroundColor: c.hex }}
+                  >
+                    {c.hex}
+                  </span>
+                </li>
+              </ElementReveal>
+            ))}
           </ul>
         </div>
       </section>
 
-      <footer className="font-plus-jakarta-sans mt-auto px-4 pb-4 text-[10px] font-semibold tracking-[-0.01em] text-zinc-400">
-        <h5>© 2025 Denislav Dimitrov</h5>
+      <footer className="font-plus-jakarta-sans mt-auto px-4 pb-4 text-[10px] font-semibold tracking-[-0.01em] opacity-50">
+        <h5>{aboutData.footerText}</h5>
       </footer>
     </main>
   );
