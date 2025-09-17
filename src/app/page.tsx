@@ -748,7 +748,7 @@ export default function Slider() {
   };
 
   return (
-    <div className="slider-page relative grid max-h-dvh min-h-dvh w-screen overflow-hidden bg-white">
+    <div className="slider-page bg-light relative grid max-h-dvh min-h-dvh w-screen overflow-hidden">
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
