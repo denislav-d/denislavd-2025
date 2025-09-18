@@ -46,6 +46,9 @@ export default function Slider() {
   });
   const [touchMoved, setTouchMoved] = useState(false);
   const [isSliderMoving, setIsSliderMoving] = useState(false);
+  const [isAppearAnimationFinished, setIsAppearAnimationFinished] =
+    useState(false);
+  const isAppearAnimationFinishedRef = useRef(false);
   const [currentGradient, setCurrentGradient] = useState({
     from: slides[0].gradientScheme.from,
     via: slides[0].gradientScheme.via,
@@ -229,6 +232,10 @@ export default function Slider() {
       clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
       duration: 1.4,
       ease: "hop",
+      onComplete: () => {
+        isAppearAnimationFinishedRef.current = true;
+        setIsAppearAnimationFinished(true);
+      },
     });
 
     gsap.to(projectTitle, {
@@ -302,29 +309,35 @@ export default function Slider() {
     }
 
     function navigateToSlide(targetIndex: number) {
-      if (targetIndex >= 0 && targetIndex < slides.length) {
-        // Track interaction time
-        lastInteractionTime = Date.now();
-
-        const currentPos = scrollPosition;
-        const distance = targetIndex - currentPos;
-        const direction = distance > 0 ? 1 : -1;
-
-        const intensityMultiplier = Math.min(Math.abs(distance) * 0.3, 0.8);
-        targetScrollIntensity += direction * intensityMultiplier;
-
-        // Clamp intensity to maximum values
-        targetScrollIntensity = Math.max(
-          -maxScrollIntensity,
-          Math.min(maxScrollIntensity, targetScrollIntensity),
-        );
-
-        targetScrollPosition = targetIndex;
-        isSnapping = false;
-        isStable = false;
-        isMoving = true;
-        hideTitle();
+      if (
+        !isAppearAnimationFinishedRef.current ||
+        targetIndex < 0 ||
+        targetIndex >= slides.length
+      ) {
+        return;
       }
+
+      // Track interaction time
+      lastInteractionTime = Date.now();
+
+      const currentPos = scrollPosition;
+      const distance = targetIndex - currentPos;
+      const direction = distance > 0 ? 1 : -1;
+
+      const intensityMultiplier = Math.min(Math.abs(distance) * 0.3, 0.8);
+      targetScrollIntensity += direction * intensityMultiplier;
+
+      // Clamp intensity to maximum values
+      targetScrollIntensity = Math.max(
+        -maxScrollIntensity,
+        Math.min(maxScrollIntensity, targetScrollIntensity),
+      );
+
+      targetScrollPosition = targetIndex;
+      isSnapping = false;
+      isStable = false;
+      isMoving = true;
+      hideTitle();
     }
 
     // Store navigation function in ref for external access
@@ -415,6 +428,8 @@ export default function Slider() {
     let isMouseDragging = false;
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (!isAppearAnimationFinishedRef.current) return;
+
       const touch = event.touches[0];
       touchStartY = touch.clientY;
       touchStartX = touch.clientX;
@@ -485,6 +500,8 @@ export default function Slider() {
     };
 
     const handleMouseDown = (event: MouseEvent) => {
+      if (!isAppearAnimationFinishedRef.current) return;
+
       mouseStartY = event.clientY;
       mouseStartX = event.clientX;
       lastMouseY = event.clientY;
@@ -552,6 +569,11 @@ export default function Slider() {
     };
 
     const handleWheel = (event: WheelEvent) => {
+      if (!isAppearAnimationFinishedRef.current) {
+        event.preventDefault();
+        return;
+      }
+
       event.preventDefault();
 
       isSnapping = false;
@@ -742,9 +764,10 @@ export default function Slider() {
   }, [realTimePosition]);
 
   const handleNavigateToSlide = (index: number) => {
-    if (navigationFunctionRef.current) {
-      navigationFunctionRef.current(index);
+    if (!isAppearAnimationFinished || !navigationFunctionRef.current) {
+      return;
     }
+    navigationFunctionRef.current(index);
   };
 
   return (
