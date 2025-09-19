@@ -40,12 +40,23 @@ export default function ProjectHero({
         )}
       >
         <ElementReveal animateOnScroll>
-          <Image
-            fill
-            src={hero.image}
-            alt={hero.alt || title}
-            className="w-full object-cover"
-          />
+          {hero.type === "image" ? (
+            <Image
+              fill
+              src={hero.src}
+              alt={hero.alt || title}
+              className="w-full object-cover"
+            />
+          ) : (
+            <video
+              src={hero.src}
+              className="w-full"
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          )}
         </ElementReveal>
       </figure>
     </section>

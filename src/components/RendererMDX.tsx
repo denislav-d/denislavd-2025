@@ -31,7 +31,7 @@ export default function RendererMDX({
       </h3>
     ),
     h4: ({ children }) => (
-      <h4 className="font-eb-garamond pb-2 text-center text-xl tracking-[-0.02em] max-sm:px-4">
+      <h4 className="font-eb-garamond pt-8 pb-2 text-center text-xl tracking-[-0.02em] max-sm:px-4">
         {children}
       </h4>
     ),
@@ -59,6 +59,7 @@ export default function RendererMDX({
         {children}
       </ol>
     ),
+    // Improve this
     li: ({ children }) => <li className="mb-1 w-fit">{children}</li>,
     code: ({ children }) => (
       <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
