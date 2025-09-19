@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useEffect, useRef, useMemo, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
@@ -21,15 +21,15 @@ export default function Projects() {
   const gridRef = useRef<HTMLDivElement | null>(null);
   const isInitializedRef = useRef(false);
   const baseProjects = getAllProjects();
+  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
-  // Memoize the projects array to prevent unnecessary recalculations
   const projects = useMemo((): GridItem[] => {
     const placeholder = (id: string): PlaceholderItem => ({
       id,
       isPlaceholder: true,
     });
 
-    // Fixed pattern based on the commented code
+    // Fixed pattern for the projects
     const gridItems: GridItem[] = [
       baseProjects[1], // Detaile
       placeholder("placeholder-1"),
@@ -48,22 +48,45 @@ export default function Projects() {
       placeholder("placeholder-10"),
     ];
 
-    const infiniteGridItems = [gridItems[gridItems.length - 1], ...gridItems];
-    //!TODO FIX: Create multiple cycles for infinite scrolling
+    if (isMobile === true) {
+      return baseProjects;
+    }
+
+    const multipleGridItems = [gridItems[gridItems.length - 1], ...gridItems];
     return Array.from({ length: 5 }, (_, cycleIndex) =>
-      infiniteGridItems.map((item, itemIndex) => ({
+      multipleGridItems.map((item, itemIndex) => ({
         ...item,
         id: `${item.id}-cycle-${cycleIndex}-${itemIndex}`,
       })),
     ).flat();
-  }, [baseProjects]);
+  }, [baseProjects, isMobile]);
+
+  useEffect(() => {
+    const checkIsMobile = () => {
+      const mobile = window.innerWidth < 640;
+      setIsMobile(mobile);
+    };
+
+    checkIsMobile();
+
+    window.addEventListener("resize", checkIsMobile);
+
+    return () => {
+      window.removeEventListener("resize", checkIsMobile);
+    };
+  }, []);
 
   useEffect(() => {
     const grid = gridRef.current;
-    if (!grid || isInitializedRef.current) return;
+    if (!grid) return;
+
+    // Reset initialization to allow re-initialization when dependencies change
+    isInitializedRef.current = false;
 
     let smoother: ReturnType<typeof ScrollSmoother.create> | null = null;
     let currentColumnCount: number | null = null;
+
+    const isMobileDevice = () => window.innerWidth < 640;
 
     const baseLag = 0.1;
     const lagIncrement = 0.2;
@@ -119,7 +142,6 @@ export default function Projects() {
 
     const init = () => {
       try {
-        // Quick validation - elements should be ready by useEffect
         const items = grid.querySelectorAll(".grid__item");
         if (items.length === 0) return;
 
@@ -133,16 +155,23 @@ export default function Projects() {
           smoother = null;
         }
 
-        smoother = ScrollSmoother.create({
-          wrapper: "#smooth-wrapper",
-          content: "#smooth-content",
-          smooth: 1.2,
-          effects: true,
-          normalizeScroll: true,
-        });
+        // Only apply smooth scroll effects on non-mobile devices
+        if (!isMobileDevice()) {
+          smoother = ScrollSmoother.create({
+            wrapper: "#smooth-wrapper",
+            content: "#smooth-content",
+            smooth: 1.2,
+            effects: true,
+            normalizeScroll: true,
+          });
 
-        applyDirectLagEffects(smoother);
-        animateInitialAppear();
+          applyDirectLagEffects(smoother);
+        }
+
+        // Small delay to ensure DOM is fully ready
+        requestAnimationFrame(() => {
+          animateInitialAppear();
+        });
         isInitializedRef.current = true;
       } catch {
         isInitializedRef.current = false;
@@ -167,10 +196,12 @@ export default function Projects() {
       }, 100);
     };
 
-    init();
+    // Small delay to ensure the component has fully rendered
+    const initTimer = setTimeout(init, 50);
     window.addEventListener("resize", handleResize);
 
     return () => {
+      clearTimeout(initTimer);
       clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
 
@@ -183,25 +214,25 @@ export default function Projects() {
 
       isInitializedRef.current = false;
     };
-  }, []);
+  }, [isMobile, projects]);
 
   return (
-    <div id="smooth-wrapper">
+    <main id="smooth-wrapper">
       <div id="smooth-content">
-        <main className="px-4 pt-30 lg:px-16">
+        <div className="px-4 pt-30 lg:px-16">
           <div
             ref={gridRef}
-            className="grid grid-cols-3 gap-x-10 gap-y-16 sm:grid-cols-4 lg:grid-cols-5 lg:gap-x-32"
+            className="xs:gap-x-16 grid grid-cols-2 gap-x-10 gap-y-16 sm:grid-cols-4 md:gap-x-10 lg:grid-cols-5 lg:gap-x-16 xl:gap-x-32"
           >
             {projects.map((item) => {
-              // Render placeholder items
+              // Placeholder items (hidden on mobile)
               if ("isPlaceholder" in item && item.isPlaceholder) {
                 return (
                   <div
                     key={item.id}
-                    className="grid__item flex flex-col gap-y-2 opacity-0"
+                    className="grid__item hidden flex-col gap-y-2 opacity-0 sm:flex"
                   >
-                    <figure className="relative aspect-[0.8/1] bg-zinc-400/20 blur-sm" />
+                    <figure className="relative aspect-[1.1/1.51] bg-zinc-400/20 blur-sm" />
                     <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
                       ???
                     </h4>
@@ -209,7 +240,7 @@ export default function Projects() {
                 );
               }
 
-              // Render actual projects
+              // Actual projects
               const project = item as Project;
               return (
                 <Link
@@ -227,15 +258,20 @@ export default function Projects() {
                       priority={projects.indexOf(project) < 15}
                     />
                   </figure>
-                  <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em] transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-95">
-                    {project.title}
-                  </h4>
+                  <div className="flex flex-col gap-y-0.5 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-95">
+                    <h2 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
+                      {project.slide.title}
+                    </h2>
+                    <h3 className="font-plus-jakarta-sans text-[10px] font-medium tracking-[-0.01em] text-zinc-500">
+                      {project.slide.subtitle}
+                    </h3>
+                  </div>
                 </Link>
               );
             })}
           </div>
-        </main>
+        </div>
       </div>
-    </div>
+    </main>
   );
 }
