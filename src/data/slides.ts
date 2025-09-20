@@ -30,7 +30,8 @@ interface Project {
     role: string;
   };
   hero: {
-    image: string;
+    type: "image" | "video";
+    src: string;
     alt?: string;
     orientation: "portrait" | "landscape";
   };
@@ -42,19 +43,20 @@ interface Project {
 
 export const projects: Project[] = [
   {
-    id: "ddw-2025",
-    slug: "dutch-design-week-2025",
-    title: "Dutch Design Week 2025",
+    id: "mutual-imprint",
+    slug: "mutual-imprint",
+    title: "Mutual Imprint",
     description:
       "Bringing people together with virtual hugs! An interactive installation that explores human connection through technology, combining real-time body tracking and digital visualization, translating movements and interactions into a shared and immersive experience.",
     metadata: {
       year: "2025",
-      category: "Interactive Installation",
+      category: "Interactive Installation for Dutch Design Week 2025",
       technologies: ["Spline", "WebGL", "TouchDesigner"],
-      role: "Lead Developer & Creative Technologist",
+      role: "Lead Developer & Interaction Designer",
     },
     hero: {
-      image: "/images/ddw/transluscent-blobs.png",
+      type: "image",
+      src: "/media/ddw/ddw-hero.png",
       orientation: "landscape",
     },
     content: {
@@ -66,7 +68,7 @@ export const projects: Project[] = [
         },
         {
           type: "image",
-          src: "/images/ddw/generated-hug.png",
+          src: "/media/ddw/ddw-generated-hug.png",
           alt: "Generated hug visualization",
           orientation: "landscape",
         },
@@ -77,7 +79,7 @@ export const projects: Project[] = [
         },
         {
           type: "image",
-          src: "/images/ddw/touch-designer-process.png",
+          src: "/media/ddw/ddw-touch-designer-process.png",
           alt: "TouchDesigner process",
           orientation: "landscape",
         },
@@ -89,9 +91,9 @@ export const projects: Project[] = [
         {
           type: "gallery",
           images: [
-            "/images/ddw/test1.png",
-            "/images/ddw/test2.png",
-            "/images/ddw/test5.png",
+            "/media/ddw/ddw-3d-split.png",
+            "/media/ddw/ddw-merged.png",
+            "/media/ddw/ddw-lattice.png",
           ],
         },
         {
@@ -101,7 +103,7 @@ export const projects: Project[] = [
         },
         {
           type: "video",
-          src: "/images/ddw/BlobSprint1Demo.mov",
+          src: "/media/ddw/ddw-blob-demo.mp4",
         },
         {
           type: "text",
@@ -110,7 +112,7 @@ export const projects: Project[] = [
         },
         {
           type: "image",
-          src: "/images/ddw.png",
+          src: "/media/ddw.png",
           alt: "Poster",
           orientation: "poster",
         },
@@ -121,154 +123,19 @@ export const projects: Project[] = [
         },
         {
           type: "video",
-          src: "/images/ddw/InnovationsInsightDemoVideo.MOV",
+          src: "/media/ddw/ddw-innovations-demo.mp4",
         },
       ],
     },
     slide: {
-      image: "/images/ddw.png",
-      url: "/dutch-design-week-2025",
-      title: "Dutch Design Week 2025",
-      subtitle: "Virtual Hugs",
+      image: "/media/ddw.png",
+      url: "/mutual-imprint",
+      title: "Mutual Imprint",
+      subtitle: "Dutch Design Week 2025",
       gradientScheme: {
         from: "rgb(245, 245, 245)",
         via: "rgba(251, 146, 60, 0.3)",
         to: "rgba(236, 72, 153, 0.3)",
-      },
-    },
-  },
-  {
-    id: "detaile",
-    slug: "detaile",
-    title: "Detaile",
-    description:
-      "Detaile explores the idea of a stylist application that generates personalized outfit recommendations powered by Artificial Intelligence which are adjusted to the user's personal style, preferences, and location.",
-    metadata: {
-      year: "2025",
-      category: "Native iOS Application",
-      technologies: ["SwiftUI", "AI", "OpenAI API", "CoreML"],
-      role: "Mobile Developer",
-    },
-    hero: {
-      image: "/images/detaile/detaile-hero.png",
-      orientation: "portrait",
-    },
-    content: {
-      blocks: [
-        {
-          type: "text",
-          content: `## The Concept
-          Users can create a virtual wardrobe by uploading photos of their own clothing items, turning the app into a digital reflection of their real closet. Based on this wardrobe, the app generates tailored outfit suggestions that adapt to different daily contexts - such as the current weather, personal style preferences, favorite colors, or upcoming events. This approach not only helps fashion enthusiasts experiment with new looks, but also supports users who aren't really into fashion and simply want to save time by also removing the daily stress of deciding what to wear.
-         `,
-        },
-        {
-          type: "image",
-          src: "/images/detaile/detaile-concept.png",
-          alt: "Detaile Concept",
-          orientation: "landscape",
-        },
-        {
-          type: "text",
-          content: `## The Process
-           I decided to develop this project as a native iOS application, drawing on Apple’s Human Interface Guidelines for structure and design best practices. The recommendations initially began as a simple rules-based system that matched clothing categories, applied color harmony, and scored outfit completeness, but it lacked personalization. Then, I transitioned to CoreML, enabling fast on-device processing that kept wardrobe data private, worked offline, reduced latency, and avoided API costs, while handling tasks like clothing classification, color analysis, and weather-based scoring. To push the concept further, I integrated optional usage of OpenAI’s GPT-4 Vision, which added contextual understanding and natural-language suggestions, creating a hybrid approach that combined the speed and privacy of CoreML with the flexibility and creativity of external AI.`,
-        },
-        {
-          type: "gallery",
-          images: [
-            "/images/detaile/detaile-wardrobe.png",
-            "/images/detaile/detaile-item-details.png",
-            "/images/detaile/detaile-account.png",
-          ],
-        },
-        {
-          type: "text",
-          content: `## Additional Features
-          Further enhancing the experience, I added features that make the virtual wardrobe both functional and visually engaging. Each clothing item has its background removed and is displayed with a thick white border, giving it a playful ‘sticker-like’ look on the daily detail page. Using GPT-4 Vision, the app automatically detects colors and clothing types from uploaded images, reducing manual input and making the wardrobe easier to manage, since that was a major pain point which costed users a lot of time. On top of that, a style grid is able to capture user preferences, location data adapts suggestions to weather, and flexible settings let users choose whether to prioritize style, color, events, weather — or even combine all of them. Together, these features make recommendations more personalized, intuitive, and fun to use.`,
-        },
-        {
-          type: "gallery",
-          images: [
-            "/images/detaile/detaile-style-grid.png",
-            "/images/detaile/detaile-location.png",
-            "/images/detaile/detaile-settings.png",
-          ],
-        },
-        {
-          type: "text",
-          content: `## The Poster`,
-        },
-        {
-          type: "image",
-          src: "/images/detaile/detaile-poster.png",
-          alt: "Poster",
-          orientation: "poster",
-        },
-        {
-          type: "text",
-          content: `## The Final Demo
-          The final demo provides a refined and polished user experience. Uploaded clothing images can be manually resized to fit neatly in the wardrobe to maintain a consistent look. Users can like outfits, which are saved to a dedicated tab and used to improve the recommendation model, while dislikes are also tracked so the system adapts over time. To make the application more intuitive, more help screens, onboarding guidance, and a ‘recently deleted’ section similar to the iOS gallery was added, ensuring users have full control throughout their styling journey.`,
-        },
-        {
-          type: "gallery",
-          images: [
-            "/images/detaile/detaile-daily-detaile.png",
-            "/images/detaile/detaile-favorites.png",
-            "/images/detaile/detaile-resize.png",
-          ],
-        },
-      ],
-    },
-    slide: {
-      image: "/images/detaile.png",
-      url: "/detaile",
-      title: "Detaile",
-      subtitle: "Perfect Outfits",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgb(228, 228, 231)",
-        to: "rgb(214, 211, 209)",
-      },
-    },
-  },
-  {
-    id: "spotlight",
-    slug: "spotlight",
-    title: "Spotlight",
-    description:
-      "Discover and recommend local events based on your interests and preferences.",
-    metadata: {
-      year: "2024",
-      category: "Progressive Web App",
-      technologies: [
-        "Next.js",
-        "Spotify API",
-        "SCSS",
-        "Recommendation Algorithm",
-      ],
-      role: "Frontend Developer",
-    },
-    hero: {
-      image: "/images/spotlight.png",
-      orientation: "portrait",
-    },
-    content: {
-      blocks: [
-        {
-          type: "text",
-          content:
-            "Spotlight helps users discover local events and activities based on their interests, location, and social connections.",
-        },
-      ],
-    },
-    slide: {
-      image: "/images/spotlight.png",
-      url: "/spotlight",
-      title: "Spotlight",
-      subtitle: "Event Recommendations",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgba(177, 151, 250, 0.3)",
-        to: "rgba(109, 57, 255, 0.3)",
       },
     },
   },
@@ -293,20 +160,56 @@ export const projects: Project[] = [
       role: "Full-stack Developer",
     },
     hero: {
-      image: "/images/strijp-s-ai-assistant.png",
-      orientation: "portrait",
+      type: "video",
+      src: "/media/strijp-s-ai/strijp-s-ai-video.mov",
+      orientation: "landscape",
     },
     content: {
       blocks: [
         {
           type: "text",
-          content:
-            "An AI assistant designed to make information about the Strijp-S district more accessible to visitors and residents.",
+          content: `## The Concept
+            During my internship at Gewest13, a digital branding studio specializing in award-winning websites and campaigns, I was assigned to design and implement an AI chatbot tool for the newly updated Strijp-S website. The idea was to create a tailored, intelligent assistant that enhances user experience by answering location-specific questions and providing helpful resources, making the information more accessible to visitors and users. Beyond Strijp-S, the chatbot needed to be scalable and adaptable, so it could later be integrated into other client projects, collaborators’ platforms, and organizations.`,
+        },
+        {
+          type: "image",
+          src: "/media/strijp-s-ai/strijp-s-ai-intro.png",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Process
+            #### Technical Foundations
+            I researched and made key decisions about the AI model, hosting platform, database structure, and retrieval methods. This involved comparing solutions, running tests, gathering feedback, and refining prototypes. I then developed and integrated the chosen solution into the Strijp-S website, ensuring it was stable and ready for deployment.
+
+            #### Tailored User Experience
+            I designed the chatbot to meet the specific needs of Strijp-S users. Through research, iterative prototypes, and continuous feedback sessions, I shaped the chatbot to provide accurate, relevant, and user-friendly interactions.
+
+            #### Additional Features
+            Throughout the project, I also explored various vector databases to store embeddings and handle semantic search. Leveraged the Vercel AI SDK, implemented API integrations for Google Maps and Weather API, and collected user input to improve the model and analytics. Other features include refreshing the answer, copying the response, and clearing the chat for usability.`,
+        },
+        {
+          type: "image",
+          src: "/media/strijp-s-ai/strijp-s-ai-desktop.png",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Final Result
+         The outcome was a modern, professional AI chatbot fully integrated into the Strijp-S website. It offered a user-friendly interface aligned with the site’s design, smart, domain-specific answers to Strijp-S users’ questions, additional helpful features like travel routes, weather updates, and feedback options, and a scalable framework, allowing Gewest13 to adapt the chatbot for future clients and projects. The chatbot serves as a valuable user experience enhancement for every website it is integrated into.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/strijp-s-ai/strijp-s-ai-privacy.png",
+            "/media/strijp-s-ai/strijp-s-ai-mobile.png",
+            "/media/strijp-s-ai/strijp-s-ai-feedback.png",
+          ],
         },
       ],
     },
     slide: {
-      image: "/images/strijp-s-ai-assistant.png",
+      image: "/media/strijp-s-ai-assistant.png",
       url: "/strijp-s-ai-assistant",
       title: "Strijp-S AI Assistant",
       subtitle: "Accessible Information",
@@ -318,11 +221,167 @@ export const projects: Project[] = [
     },
   },
   {
+    id: "detaile",
+    slug: "detaile",
+    title: "Detaile",
+    description:
+      "Detaile explores the idea of a stylist application that generates personalized outfit recommendations powered by Artificial Intelligence which are adjusted to the user's personal style, preferences, and location.",
+    metadata: {
+      year: "2025",
+      category: "Native iOS Application",
+      technologies: ["SwiftUI", "AI", "OpenAI API", "CoreML"],
+      role: "Mobile Developer",
+    },
+    hero: {
+      type: "image",
+      src: "/media/detaile/detaile-hero.png",
+      orientation: "portrait",
+    },
+    content: {
+      blocks: [
+        {
+          type: "text",
+          content: `## The Concept
+          Users can create a virtual wardrobe by uploading photos of their own clothing items, turning the app into a digital reflection of their real closet. Based on this wardrobe, the app generates tailored outfit suggestions that adapt to different daily contexts - such as the current weather, personal style preferences, favorite colors, or upcoming events. This approach not only helps fashion enthusiasts experiment with new looks, but also supports users who aren't really into fashion and simply want to save time by also removing the daily stress of deciding what to wear.
+         `,
+        },
+        {
+          type: "image",
+          src: "/media/detaile/detaile-concept.png",
+          alt: "Detaile Concept",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Process
+           I decided to develop this project as a native iOS application, drawing on Apple’s Human Interface Guidelines for structure and design best practices. The recommendations initially began as a simple rules-based system that matched clothing categories, applied color harmony, and scored outfit completeness, but it lacked personalization. Then, I transitioned to CoreML, enabling fast on-device processing that kept wardrobe data private, worked offline, reduced latency, and avoided API costs, while handling tasks like clothing classification, color analysis, and weather-based scoring. To push the concept further, I integrated optional usage of OpenAI’s GPT-4 Vision, which added contextual understanding and natural-language suggestions, creating a hybrid approach that combined the speed and privacy of CoreML with the flexibility and creativity of external AI.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/detaile/detaile-wardrobe.png",
+            "/media/detaile/detaile-item-details.png",
+            "/media/detaile/detaile-account.png",
+          ],
+        },
+        {
+          type: "text",
+          content: `## Additional Features
+          Further enhancing the experience, I added features that make the virtual wardrobe both functional and visually engaging. Each clothing item has its background removed and is displayed with a thick white border, giving it a playful ‘sticker-like’ look on the daily detail page. Using GPT-4 Vision, the app automatically detects colors and clothing types from uploaded images, reducing manual input and making the wardrobe easier to manage, since that was a major pain point which costed users a lot of time. On top of that, a style grid is able to capture user preferences, location data adapts suggestions to weather, and flexible settings let users choose whether to prioritize style, color, events, weather — or even combine all of them. Together, these features make recommendations more personalized, intuitive, and fun to use.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/detaile/detaile-style-grid.png",
+            "/media/detaile/detaile-location.png",
+            "/media/detaile/detaile-settings.png",
+          ],
+        },
+        {
+          type: "text",
+          content: `## The Poster`,
+        },
+        {
+          type: "image",
+          src: "/media/detaile/detaile-poster.png",
+          alt: "Poster",
+          orientation: "poster",
+        },
+        {
+          type: "text",
+          content: `## The Final Demo
+          The final demo provides a refined and polished user experience. Uploaded clothing images can be manually resized to fit neatly in the wardrobe to maintain a consistent look. Users can like outfits, which are saved to a dedicated tab and used to improve the recommendation model, while dislikes are also tracked so the system adapts over time. To make the application more intuitive, more help screens, onboarding guidance, and a ‘recently deleted’ section similar to the iOS gallery was added, ensuring users have full control throughout their styling journey.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/detaile/detaile-daily-detaile.png",
+            "/media/detaile/detaile-favorites.png",
+            "/media/detaile/detaile-resize.png",
+          ],
+        },
+      ],
+    },
+    slide: {
+      image: "/media/detaile.png",
+      url: "/detaile",
+      title: "Detaile",
+      subtitle: "Perfect Outfits",
+      gradientScheme: {
+        from: "rgb(245, 245, 245)",
+        via: "rgb(228, 228, 231)",
+        to: "rgb(214, 211, 209)",
+      },
+    },
+  },
+  {
+    id: "spotlight",
+    slug: "spotlight",
+    title: "Spotlight",
+    description:
+      "Spotlight helps users discover local events and activities based on their interests, location, and Spotify account. It allows you to login with your Spotify account and choose the playlists to get recommendations on, since you might be sharing the account with someone else or are just in a specific mood. The application then provides you with recommendations of events which you might like based on your music taste.",
+    metadata: {
+      year: "2024",
+      category: "Progressive Web App",
+      technologies: ["Next.js", "SCSS", "Spotify API"],
+      role: "Frontend Developer",
+    },
+    hero: {
+      type: "image",
+      src: "/media/spotlight/spotlight-hero.png",
+      orientation: "landscape",
+    },
+    content: {
+      blocks: [
+        {
+          type: "text",
+          content: `## The Concept
+          The project originated from [Citric Labs](https://citriclabs.xyz/)’ initial idea, which my team and I further developed into the full application. The core concept was to integrate Spotify, so that users could log in with their accounts and receive personalized event recommendations based on their listening habits. To make the experience more flexible, the app also allows users to select specific playlists, ensuring recommendations match their current mood or personal taste, even if the account is shared.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/spotlight/spotlight-playlists.png",
+            "/media/spotlight/spotlight-home.png",
+            "/media/spotlight/spotlight-artists.png",
+          ],
+        },
+        {
+          type: "text",
+          content: `## The Process
+          My role as the frontend developer was to create a consistent and engaging user interface, closely aligned with designer-provided wireframes. I worked collaboratively with the design teammate to translate stakeholder requirements into a functional and intuitive interface, focusing on usability and visual consistency. This involved implementing interactive features such as playlist selection, onboarding flows, event cards with recommendation percentages, and ensuring smooth integration with Spotify. My responsibility was not just to build the user interface, but also to maintain cohesion between design intent and the technical execution.
+          
+          ## The Final Demo
+          The final application provides users with a seamless experience for discovering events they are likely to enjoy. Key features include logging in using your Spotify account, personalized recommendations based on selected playlists, upcoming artist concerts, favoriting events, and location-based filtering. Users can preview artists through an embedded Spotify player, view detailed event pages, and quickly get redirected to purchase tickets directly. Altogether, the result was a polished, user-focused product that balanced personalization, interactivity, and practicality.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/spotlight/spotlight-artist-1.png",
+            "/media/spotlight/spotlight-artist-2.png",
+            "/media/spotlight/spotlight-about.png",
+          ],
+        },
+      ],
+    },
+    slide: {
+      image: "/media/spotlight.png",
+      url: "/spotlight",
+      title: "Spotlight",
+      subtitle: "Event Recommendations",
+      gradientScheme: {
+        from: "rgb(245, 245, 245)",
+        via: "rgba(177, 151, 250, 0.3)",
+        to: "rgba(109, 57, 255, 0.3)",
+      },
+    },
+  },
+  {
     id: "vetemore",
     slug: "vetemore",
     title: "Vetemòre",
-    description:
-      "Sustainable fashion platform promoting thoughtful consumption and ethical fashion choices.",
+    description: `
+            Vetemòre is an online fashion store designed to provide more than just products, promoting thoughtful consumption and sustainable choices. The platform focuses on offering curated information about brands, designers, and the world of fashion, filling the gap of a centralised source for fashion enthusiasts and newcomers. The name comes from the French “vêtements” (clothes) combined with “more”, highlighting its focus on both fashion items and deeper insights into the culture of fashion.`,
     metadata: {
       year: "2024",
       category: "E-commerce Platform",
@@ -330,27 +389,34 @@ export const projects: Project[] = [
       role: "Frontend Developer",
     },
     hero: {
-      image: "/images/vetemore.png",
-      orientation: "portrait",
+      type: "image",
+      src: "/media/vetemore/vetemore-hero.png",
+      orientation: "landscape",
     },
     content: {
       blocks: [
         {
           type: "text",
-          content:
-            "Vetemòre is a sustainable fashion platform that promotes thoughtful consumption and connects consumers with ethical fashion brands.",
+          content: `The development of Vetemòre was centered on building a functional, visually refined, and informative platform for fashion enthusiasts. A minimalistic design was chosen to match the aesthetics of high fashion. Data for the products was scraped, filtered, and stored in structured CSV files, which were then dynamically rendered using Next.js. Dynamic routing was implemented to allow seamless navigation between brand, designer, and product-specific pages.
+
+          Key e-commerce functionalities such as sorting, filtering, recommendation system, were implemented, ensuring a smooth and intuitive browsing experience for users. To guarantee stability and usability, the application was tested with Cypress, covering frontend regression testing scenarios. The result was a scalable and modern web application that combines a product showcase with a strong editorial component, offering not only an online fashion store but also a source of knowledge about the broader fashion world.`,
+        },
+        {
+          type: "image",
+          src: "/media/vetemore/vetemore-desktop.png",
+          orientation: "landscape",
         },
       ],
     },
     slide: {
-      image: "/images/vetemore.png",
+      image: "/media/vetemore.png",
       url: "/vetemore",
       title: "Vetemòre",
       subtitle: "Thoughtful Fashion",
       gradientScheme: {
         from: "rgb(245, 245, 245)",
-        via: "rgb(255, 230, 233, 0.3)",
-        to: "rgba(254, 215, 170, 0.4)",
+        via: "rgba(238, 232, 170, 0.4)",
+        to: "rgba(218, 165, 32, 0.4)",
       },
     },
   },
@@ -367,7 +433,7 @@ export const projects: Project[] = [
   //     role: "Frontend Developer",
   //   },
   //   hero: {
-  //     image: "/images/medify.png",
+  //     image: "/media/medify.png",
   //     orientation: "portrait",
   //   },
   // },
