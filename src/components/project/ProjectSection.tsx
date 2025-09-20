@@ -8,7 +8,7 @@ export default function ProjectSection(block: ContentBlock) {
   switch (block.type) {
     case "text":
       return (
-        <section className="mx-auto flex max-w-prose flex-col gap-y-12 py-8">
+        <section className="mx-auto flex max-w-prose flex-col gap-y-12 py-8 max-[680px]:px-4">
           <ElementReveal animateOnScroll>
             <RendererMDX description={block.content || ""} />
           </ElementReveal>
@@ -21,9 +21,9 @@ export default function ProjectSection(block: ContentBlock) {
           <figure
             className={cn(
               "relative",
-              block.orientation === "portrait"
-                ? "aspect-[0.8/1]"
-                : "aspect-[16/10]",
+              block.orientation === "landscape" && "aspect-16/10",
+              block.orientation === "portrait" && "aspect-[0.8/1]",
+              block.orientation === "poster" && "aspect-[1/1.41]",
             )}
           >
             <ElementReveal animateOnScroll>
@@ -32,6 +32,7 @@ export default function ProjectSection(block: ContentBlock) {
                 src={block.src || ""}
                 alt={block.alt || ""}
                 className="w-full object-cover"
+                sizes="(max-width: 768px) 100vw, 640px"
               />
             </ElementReveal>
           </figure>
@@ -59,13 +60,17 @@ export default function ProjectSection(block: ContentBlock) {
         <section className="mx-auto flex flex-col gap-y-12 py-8">
           <div className="grid w-full grid-cols-1 gap-4 px-4 md:grid-cols-3">
             {block.images?.map((image, index) => (
-              <div className="relative aspect-[0.8/1]" key={index}>
-                <ElementReveal animateOnScroll>
+              <div
+                className="relative aspect-[10/16] sm:aspect-[0.8/1]"
+                key={index}
+              >
+                <ElementReveal animateOnScroll delay={index * 0.15}>
                   <Image
                     fill
                     src={image}
                     alt={block.alt || ""}
                     className="object-cover"
+                    sizes="(max-width: 768px) 100vw, 640px"
                   />
                 </ElementReveal>
               </div>

@@ -36,7 +36,7 @@ export default function RendererMDX({
       </h4>
     ),
     p: ({ children }) => (
-      <p className="font-plus-jakarta-sans max-w-prose text-sm font-semibold tracking-[-0.01em] max-sm:px-4">
+      <p className="font-plus-jakarta-sans max-w-prose text-sm font-semibold tracking-[-0.01em]">
         {children}
       </p>
     ),

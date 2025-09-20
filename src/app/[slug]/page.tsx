@@ -42,8 +42,8 @@ export default async function Project({ params }: ProjectPageProps) {
         <ProjectSection key={index} {...block} />
       ))}
 
-      <footer className="flex items-center justify-center pb-8 sm:pb-16">
-        <div className="flex w-full max-w-prose justify-between max-sm:px-4">
+      <footer className="flex items-center justify-center">
+        <div className="mt-8 flex w-full max-w-prose justify-between border-t border-zinc-300 py-8 max-sm:px-4">
           <PrevNextProjectButton project={previousProject} side="prev" />
           <PrevNextProjectButton project={nextProject} side="next" />
         </div>
