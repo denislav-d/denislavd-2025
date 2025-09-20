@@ -46,6 +46,8 @@ export default function ProjectHero({
               src={hero.src}
               alt={hero.alt || title}
               className="w-full object-cover"
+              sizes="(max-width: 768px) 100vw, 640px"
+              priority
             />
           ) : (
             <video

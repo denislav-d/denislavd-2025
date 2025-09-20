@@ -15,7 +15,7 @@ const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
 });
 
-// ! TODO: dynamic metadata?
+// ? IDEA: dynamic metadata?
 
 export const metadata: Metadata = {
   title: "Denislav Dimitrov",

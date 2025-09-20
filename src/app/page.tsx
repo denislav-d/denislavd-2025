@@ -27,9 +27,6 @@ gsap.registerPlugin(CustomEase);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
 CustomEase.create("text", "0.5, 1, 0.89, 1");
 
-// ! TODO: fix links if early click
-// ! TODO: pixels between images in the slider
-
 export default function Slider() {
   const { isGradientEnabled } = useGradient();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -173,10 +170,12 @@ export default function Slider() {
       return slides.map((slide) => {
         const texture = textureLoader.load(
           slide.slideImage,
+          (loadedTexture) => {
+            loadedTexture.needsUpdate = true;
+          },
           undefined,
-          undefined,
-          () => {
-            console.log("using fallback for", slide.slideImage);
+          (error) => {
+            console.error("Error loading texture for", slide.slideImage, error);
           },
         );
 
@@ -188,13 +187,13 @@ export default function Slider() {
 
     const textures = loadTextures();
 
-    function preloadAllTextures() {
-      textures.forEach((texture) => {
-        texture.needsUpdate = true;
-      });
-    }
+    // function preloadAllTextures() {
+    //   textures.forEach((texture) => {
+    //     texture.needsUpdate = true;
+    //   });
+    // }
 
-    preloadAllTextures();
+    // preloadAllTextures();
 
     const geometry = new PlaneGeometry(
       dimensions.width,

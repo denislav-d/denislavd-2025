@@ -151,9 +151,10 @@ export default function Minimap({
           >
             <button
               data-dash
+              aria-label="Slider minimap dash"
               onClick={() => handleProjectClick(dash.slideIndex)}
               className={cn(
-                "bg-dark h-[1px] w-3 origin-left transition-all duration-500 ease-out",
+                "bg-dark h-[1px] w-3 origin-left cursor-default transition-all duration-500 ease-out",
                 getDashScale(dash.index),
                 getDashOpacity(dash.index),
                 "group-hover:bg-dark/80",
@@ -162,6 +163,7 @@ export default function Minimap({
             {dash.isMainDash && (
               <button
                 data-number
+                aria-label={`Navigate to slide ${dash.label}`}
                 onClick={() => handleProjectClick(dash.slideIndex)}
                 className={cn(
                   "absolute left-8 cursor-pointer font-mono text-[10px] transition-all duration-500 select-none hover:scale-110",
