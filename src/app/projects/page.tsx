@@ -240,17 +240,17 @@ export default function Projects() {
                 );
               }
 
-              // Actual projects
               const project = item as Project;
               return (
                 <Link
                   key={project.id}
                   href={`/${project.slug}`}
+                  target="_top"
                   className="grid__item group group flex flex-col gap-y-2 opacity-0"
                 >
                   <figure className="relative aspect-[1.1/1.51] transition-transform duration-500 group-hover:scale-95">
                     <Image
-                      src={project.slide.image}
+                      src={project.slideImage}
                       alt={project.title}
                       fill
                       className="object-cover"
@@ -260,10 +260,10 @@ export default function Projects() {
                   </figure>
                   <div className="flex flex-col gap-y-0.5 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-95">
                     <h2 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
-                      {project.slide.title}
+                      {project.title}
                     </h2>
                     <h3 className="font-plus-jakarta-sans text-[10px] font-medium tracking-[-0.01em] text-zinc-500">
-                      {project.slide.subtitle}
+                      {project.subtitle}
                     </h3>
                   </div>
                 </Link>

@@ -17,11 +17,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
   const pathname = usePathname();
 
   useEffect(() => {
-    // Disable browser's scroll restoration to let Lenis handle everything
-    if ("scrollRestoration" in history) {
-      history.scrollRestoration = "manual";
-    }
-
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -46,18 +41,6 @@ export default function SmoothScroll({ children }: SmoothScrollProps) {
         lenis.raf(time * 1000);
       });
     };
-  }, []);
-
-  // Scroll to top when route changes
-  useEffect(() => {
-    // Small delay to ensure the route transition and new content loading is complete
-    const timer = setTimeout(() => {
-      if (lenisRef.current) {
-        lenisRef.current.scrollTo(0, { immediate: true });
-      }
-    }, 50);
-
-    return () => clearTimeout(timer);
   }, [pathname]);
 
   return <>{children}</>;
