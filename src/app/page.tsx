@@ -79,7 +79,7 @@ export default function Slider() {
     // Initialize project title, subtitle and link
     projectTitle.textContent = slides[0].title;
     projectSubtitle.textContent = slides[0].subtitle;
-    projectLink.href = slides[0].url;
+    projectLink.href = `/${slides[0].slug}`;
 
     // WebGL state variables
     let scrollIntensity = 0;
@@ -172,11 +172,11 @@ export default function Slider() {
 
       return slides.map((slide) => {
         const texture = textureLoader.load(
-          slide.image,
+          slide.slideImage,
           undefined,
           undefined,
           () => {
-            console.log("using fallback for", slide.image);
+            console.log("using fallback for", slide.slideImage);
           },
         );
 
@@ -365,7 +365,7 @@ export default function Slider() {
       if (titleHidden && !titleAnimating) {
         projectTitle.textContent = slides[currentProjectIndex].title;
         projectSubtitle.textContent = slides[currentProjectIndex].subtitle;
-        projectLink.href = slides[currentProjectIndex].url;
+        projectLink.href = `/${slides[currentProjectIndex].slug}`;
 
         titleAnimating = true;
 
@@ -827,7 +827,7 @@ export default function Slider() {
       <Link
         id="project-link"
         ref={projectLinkRef}
-        href={slides[currentSlideIndex].url}
+        href={`/${slides[currentSlideIndex].slug}`}
         draggable={false}
         aria-label="Open project"
         className="pointer-events-auto absolute top-1/2 left-1/2 z-20 flex -translate-x-1/2 -translate-y-1/2 touch-none items-center justify-center select-none [user-drag:none]"

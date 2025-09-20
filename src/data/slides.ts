@@ -1,13 +1,5 @@
 import { GradientScheme } from "@/utils/gradients";
 
-interface Slide {
-  image: string;
-  url: string;
-  title: string;
-  subtitle: string;
-  gradientScheme: GradientScheme;
-}
-
 interface ContentBlock {
   type: "text" | "image" | "video" | "gallery";
   orientation?: "portrait" | "landscape" | "poster";
@@ -22,6 +14,8 @@ interface Project {
   id: string;
   slug: string;
   title: string;
+  subtitle: string;
+  slideImage: string;
   description: string;
   metadata: {
     year: string;
@@ -38,7 +32,7 @@ interface Project {
   content: {
     blocks: ContentBlock[];
   };
-  slide: Slide;
+  gradientScheme: GradientScheme;
 }
 
 export const projects: Project[] = [
@@ -46,6 +40,8 @@ export const projects: Project[] = [
     id: "mutual-imprint",
     slug: "mutual-imprint",
     title: "Mutual Imprint",
+    subtitle: "Dutch Design Week 2025",
+    slideImage: "/media/ddw.png",
     description:
       "Bringing people together with virtual hugs! An interactive installation that explores human connection through technology, combining real-time body tracking and digital visualization, translating movements and interactions into a shared and immersive experience.",
     metadata: {
@@ -127,22 +123,18 @@ export const projects: Project[] = [
         },
       ],
     },
-    slide: {
-      image: "/media/ddw.png",
-      url: "/mutual-imprint",
-      title: "Mutual Imprint",
-      subtitle: "Dutch Design Week 2025",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgba(251, 146, 60, 0.3)",
-        to: "rgba(236, 72, 153, 0.3)",
-      },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgba(251, 146, 60, 0.3)",
+      to: "rgba(236, 72, 153, 0.3)",
     },
   },
   {
     id: "strijp-s-ai",
     slug: "strijp-s-ai-assistant",
     title: "Strijp-S AI Assistant",
+    subtitle: "Accessible Information",
+    slideImage: "/media/strijp-s-ai-assistant.png",
     description:
       "AI-powered assistant for navigating and accessing information about the Strijp-S district.",
     metadata: {
@@ -208,22 +200,18 @@ export const projects: Project[] = [
         },
       ],
     },
-    slide: {
-      image: "/media/strijp-s-ai-assistant.png",
-      url: "/strijp-s-ai-assistant",
-      title: "Strijp-S AI Assistant",
-      subtitle: "Accessible Information",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgba(186, 230, 253, 0.5)",
-        to: "rgba(147, 197, 253, 0.5)",
-      },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgba(186, 230, 253, 0.5)",
+      to: "rgba(147, 197, 253, 0.5)",
     },
   },
   {
     id: "detaile",
     slug: "detaile",
     title: "Detaile",
+    subtitle: "Perfect Outfits",
+    slideImage: "/media/detaile.png",
     description:
       "Detaile explores the idea of a stylist application that generates personalized outfit recommendations powered by Artificial Intelligence which are adjusted to the user's personal style, preferences, and location.",
     metadata: {
@@ -302,22 +290,18 @@ export const projects: Project[] = [
         },
       ],
     },
-    slide: {
-      image: "/media/detaile.png",
-      url: "/detaile",
-      title: "Detaile",
-      subtitle: "Perfect Outfits",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgb(228, 228, 231)",
-        to: "rgb(214, 211, 209)",
-      },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgb(228, 228, 231)",
+      to: "rgb(214, 211, 209)",
     },
   },
   {
     id: "spotlight",
     slug: "spotlight",
     title: "Spotlight",
+    subtitle: "Event Recommendations",
+    slideImage: "/media/spotlight.png",
     description:
       "Spotlight helps users discover local events and activities based on their interests, location, and Spotify account. It allows you to login with your Spotify account and choose the playlists to get recommendations on, since you might be sharing the account with someone else or are just in a specific mood. The application then provides you with recommendations of events which you might like based on your music taste.",
     metadata: {
@@ -364,22 +348,18 @@ export const projects: Project[] = [
         },
       ],
     },
-    slide: {
-      image: "/media/spotlight.png",
-      url: "/spotlight",
-      title: "Spotlight",
-      subtitle: "Event Recommendations",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgba(177, 151, 250, 0.3)",
-        to: "rgba(109, 57, 255, 0.3)",
-      },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgba(177, 151, 250, 0.3)",
+      to: "rgba(109, 57, 255, 0.3)",
     },
   },
   {
     id: "vetemore",
     slug: "vetemore",
     title: "Vetemòre",
+    subtitle: "Thoughtful Fashion",
+    slideImage: "/media/vetemore.png",
     description: `
             Vetemòre is an online fashion store designed to provide more than just products, promoting thoughtful consumption and sustainable choices. The platform focuses on offering curated information about brands, designers, and the world of fashion, filling the gap of a centralised source for fashion enthusiasts and newcomers. The name comes from the French “vêtements” (clothes) combined with “more”, highlighting its focus on both fashion items and deeper insights into the culture of fashion.`,
     metadata: {
@@ -408,16 +388,10 @@ export const projects: Project[] = [
         },
       ],
     },
-    slide: {
-      image: "/media/vetemore.png",
-      url: "/vetemore",
-      title: "Vetemòre",
-      subtitle: "Thoughtful Fashion",
-      gradientScheme: {
-        from: "rgb(245, 245, 245)",
-        via: "rgba(238, 232, 170, 0.4)",
-        to: "rgba(218, 165, 32, 0.4)",
-      },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgba(238, 232, 170, 0.4)",
+      to: "rgba(218, 165, 32, 0.4)",
     },
   },
   // {
@@ -439,7 +413,7 @@ export const projects: Project[] = [
   // },
 ];
 
-export const slides: Slide[] = projects.map((project) => project.slide);
+export const slides: Project[] = projects;
 
 // Helper functions
 export function getProjectBySlug(slug: string): Project | undefined {
@@ -454,4 +428,4 @@ export function getAllProjects(): Project[] {
   return projects;
 }
 
-export type { Project, ContentBlock, Slide };
+export type { Project, ContentBlock };
