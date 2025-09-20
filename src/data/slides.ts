@@ -115,7 +115,7 @@ export const projects: Project[] = [
         {
           type: "text",
           content: `## The Final Demo
-            The final demo was developed using TouchDesigner and the environment setup included an Azure Kinect, a powerful PC, and a large screen. The physical floor setup guided participants to two marked spots, where the depth camera captured their movements while filtering out the surrounding audience. An introductory ‘HUG’ animation, formed from metaballs, smoothly transitioned into the tracked blob-entities once participants entered the interaction zone. This version focused on achieving the blending of the entities and functionality for a fluid and immersive experience which will be further enhanced visually.`,
+            The final demo was developed using TouchDesigner and the environment setup included an Azure Kinect, a powerful PC, and a large screen. The physical floor setup guided participants to two marked spots, where the depth camera captured their movements while filtering out the surrounding audience. An introductory ‘HUG’ animation, formed from metaballs, smoothly transitioned into the tracked blob-entities once participants entered the interaction zone. This version focused on achieving the blending of the entities and functionality for a fluid and immersive experience which will be further enhanced visually. More information about the project can be found at [KEVN](https://www.keldermanenvannoort.nl/expo/human-zoo/) and [Dutch Design Week](https://ddw.nl/programme/human-zoo)'s websites.`,
         },
         {
           type: "video",

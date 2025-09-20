@@ -16,6 +16,7 @@ const ebGaramond = EB_Garamond({
 });
 
 // ? IDEA: dynamic metadata?
+// ? Page Transitions: were successfully implemented, however the navigation animation becomes useless (and I really like it), so keep them out for now
 
 export const metadata: Metadata = {
   title: "Denislav Dimitrov",

@@ -111,7 +111,7 @@ export default function Projects() {
           amount: 1.2,
           from: "start",
         },
-        delay: 0.5,
+        delay: 0.2,
       });
     };
 
