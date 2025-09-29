@@ -1,4 +1,5 @@
 import ElementReveal from "@/components/ElementReveal";
+import ImageTrail from "@/components/ImageTrail";
 import Link from "next/link";
 import { aboutData } from "@/data/about";
 import { cn } from "@/utils/utils";
@@ -6,7 +7,17 @@ import { cn } from "@/utils/utils";
 export default function About() {
   return (
     <main className="flex min-h-dvh flex-col">
-      <section className="font-eb-garamond flex flex-col gap-y-8 px-4 pt-30 text-lg leading-[1.1em] tracking-[-0.02em] sm:max-w-4/5 md:text-xl lg:text-2xl xl:text-3xl">
+      <ImageTrail
+        images={[
+          "/media/personal/personal-1.png",
+          "/media/personal/personal-2.png",
+          "/media/personal/personal-3.png",
+          "/media/personal/personal-4.png",
+          "/media/personal/personal-5.png",
+          "/media/personal/personal-6.png",
+        ]}
+        className="font-eb-garamond mt-30 flex flex-col gap-y-8 px-4 text-lg leading-[1.1em] tracking-[-0.02em] sm:max-w-[75%] md:text-xl lg:text-2xl xl:text-3xl"
+      >
         <ElementReveal>
           <p>
             <span className="pl-8 sm:pl-16">Denislav Dimitrov</span> is a
@@ -30,16 +41,31 @@ export default function About() {
             As a person, he has always been impressed by good design -
             regardless of whether it originates from a human or nature. The
             creations which inspire you by observing their{" "}
-            <span>
+            <span className="whitespace-nowrap">
               <span className="inline text-zinc-500 blur-[0.8px]">(im)</span>
-              perfections
+              perfections.
             </span>
-            .
           </p>
         </ElementReveal>
-      </section>
+      </ImageTrail>
 
-      <section className="font-plus-jakarta-sans grid grid-cols-2 gap-y-8 px-4 py-20 text-xs font-semibold tracking-[-0.01em] sm:grid-cols-3 md:grid-cols-5 md:pt-32 lg:pt-40">
+      <ElementReveal delay={0.6}>
+        <p
+          className={cn(
+            "font-eb-garamond px-4 pt-6 text-center text-sm tracking-[-0.01em] text-zinc-500 sm:text-left lg:text-base",
+          )}
+        >
+          <span className="pointer-coarse:inline! pointer-fine:hidden!">
+            Tap
+          </span>
+          <span className="pointer-coarse:hidden! pointer-fine:inline!">
+            Hover
+          </span>{" "}
+          on the paragraphs
+        </p>
+      </ElementReveal>
+
+      <section className="font-plus-jakarta-sans grid grid-cols-2 gap-y-8 px-4 pt-12 pb-20 text-xs font-semibold tracking-[-0.01em] sm:grid-cols-3 md:grid-cols-5 md:pt-32 lg:pt-40">
         <div className="flex flex-col gap-y-8 lg:gap-y-12">
           <ElementReveal delay={0.2}>
             <h4 className="text-zinc-500">Useful Links</h4>
