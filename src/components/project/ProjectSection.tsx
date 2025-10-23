@@ -1,7 +1,7 @@
 import ElementReveal from "@/components/ElementReveal";
 import { ContentBlock } from "@/data/slides";
 import Image from "next/image";
-import { cn } from "@/utils/utils";
+import { cn, isVideo } from "@/utils/utils";
 import RendererMDX from "@/components/RendererMDX";
 
 export default function ProjectSection(block: ContentBlock) {
@@ -59,19 +59,30 @@ export default function ProjectSection(block: ContentBlock) {
       return (
         <section className="mx-auto flex flex-col gap-y-12 py-8">
           <div className="grid w-full grid-cols-1 gap-4 px-4 md:grid-cols-3">
-            {block.images?.map((image, index) => (
+            {block.images?.map((media, index) => (
               <div
                 className="relative aspect-[10/16] sm:aspect-[0.8/1]"
                 key={index}
               >
                 <ElementReveal animateOnScroll delay={index * 0.15}>
-                  <Image
-                    fill
-                    src={image}
-                    alt={block.alt || ""}
-                    className="object-cover"
-                    sizes="(max-width: 768px) 100vw, 640px"
-                  />
+                  {isVideo(media) ? (
+                    <video
+                      src={media}
+                      className="size-full object-contain"
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                    />
+                  ) : (
+                    <Image
+                      fill
+                      src={media}
+                      alt={block.alt || ""}
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 640px"
+                    />
+                  )}
                 </ElementReveal>
               </div>
             ))}
