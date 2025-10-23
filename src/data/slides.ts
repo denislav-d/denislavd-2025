@@ -33,6 +33,7 @@ interface Project {
     blocks: ContentBlock[];
   };
   gradientScheme: GradientScheme;
+  gridImages: [image1: string, image2: string];
 }
 
 export const projects: Project[] = [
@@ -43,7 +44,7 @@ export const projects: Project[] = [
     subtitle: "Dutch Design Week 2025",
     slideImage: "/media/ddw.png",
     description:
-      "Bringing people together with virtual hugs! An interactive installation that explores human connection through technology, combining real-time body tracking and digital visualization, translating movements and interactions into a shared and immersive experience.",
+      "Bringing people together with virtual hugs! An interactive installation for Dutch Design Week 2025 that explores human connection through technology, combining real-time body tracking and digital visualization, translating movements and interactions into a shared and immersive experience.",
     metadata: {
       year: "2025",
       category: "Interactive Installation for Dutch Design Week 2025",
@@ -57,6 +58,19 @@ export const projects: Project[] = [
     },
     content: {
       blocks: [
+        {
+          type: "text",
+          content: `## Dutch Design Week 2025
+            The final university demo was further enhanced by professionals in the field, resulting in the final version of the project which was presented at Dutch Design Week 2025 and got a lot of positive feedback. The Mutual Imprint interactive installation managed to achieve its goal of bringing people together, creating opportunities for more hugs, and filling people with positive emotions and love! More information about the project can be found at [KEVN](https://www.keldermanenvannoort.nl/expo/human-zoo/) and [Dutch Design Week](https://ddw.nl/programme/human-zoo)'s websites.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/ddw/ddw-human-zoo-poster.png",
+            "/media/ddw/ddw-demo.mov",
+            "/media/ddw/ddw-mutual-imprint-poster.png",
+          ],
+        },
         {
           type: "text",
           content: `## The Concept
@@ -114,8 +128,8 @@ export const projects: Project[] = [
         },
         {
           type: "text",
-          content: `## The Final Demo
-            The final demo was developed using TouchDesigner and the environment setup included an Azure Kinect, a powerful PC, and a large screen. The physical floor setup guided participants to two marked spots, where the depth camera captured their movements while filtering out the surrounding audience. An introductory ‘HUG’ animation, formed from metaballs, smoothly transitioned into the tracked blob-entities once participants entered the interaction zone. This version focused on achieving the blending of the entities and functionality for a fluid and immersive experience which will be further enhanced visually. More information about the project can be found at [KEVN](https://www.keldermanenvannoort.nl/expo/human-zoo/) and [Dutch Design Week](https://ddw.nl/programme/human-zoo)'s websites.`,
+          content: `## The Final University Demo
+            The final university demo was developed using TouchDesigner and the environment setup included an Azure Kinect, a powerful PC, and a large screen. The physical floor setup guided participants to two marked spots, where the depth camera captured their movements while filtering out the surrounding audience. An introductory ‘HUG’ animation, formed from metaballs, smoothly transitioned into the tracked blob-entities once participants entered the interaction zone. This version focused on achieving the blending of the entities and functionality for a fluid and immersive experience which will be further enhanced visually.`,
         },
         {
           type: "video",
@@ -128,6 +142,7 @@ export const projects: Project[] = [
       via: "rgba(251, 146, 60, 0.3)",
       to: "rgba(236, 72, 153, 0.3)",
     },
+    gridImages: ["/media/ddw/ddw-merged.png", "/media/ddw/ddw-3d-split.png"],
   },
   {
     id: "strijp-s-ai",
@@ -205,6 +220,10 @@ export const projects: Project[] = [
       via: "rgba(186, 230, 253, 0.5)",
       to: "rgba(147, 197, 253, 0.5)",
     },
+    gridImages: [
+      "/media/strijp-s-ai/strijp-s-ai-mobile.png",
+      "/media/strijp-s-ai/strijp-s-ai-feedback.png",
+    ],
   },
   {
     id: "detaile",
@@ -295,6 +314,123 @@ export const projects: Project[] = [
       via: "rgb(228, 228, 231)",
       to: "rgb(214, 211, 209)",
     },
+    gridImages: [
+      "/media/detaile/detaile-daily-detaile.png",
+      "/media/detaile/detaile-favorites.png",
+    ],
+  },
+  {
+    id: "medify",
+    slug: "medify",
+    title: "Med!fy",
+    subtitle: "Accessible Information",
+    slideImage: "/media/medify.png",
+    description:
+      "Med!fy is a platform designed to streamline clinical trials by addressing fragmentation issues, unifying patient data, automating documentation, and boosting adherence through real-time monitoring and gamified rewards.",
+    metadata: {
+      year: "2024 - Present",
+      category: "Clinical Trials Management Platform Startup",
+      technologies: ["Next.js", "Tailwind CSS", "PWA", "PostgreSQL"],
+      role: "Front-end Developer",
+    },
+    hero: {
+      type: "image",
+      src: "/media/medify/medify-hero.png",
+      orientation: "landscape",
+    },
+    content: {
+      blocks: [
+        {
+          type: "text",
+          content: `## The Concept
+           Med!fy is a digital platform that transforms how clinical trials are conducted, creating a connected and intelligent research ecosystem. It replaces the traditional, fragmented approach to clinical research with a unified system where data flows seamlessly between patients, clinicians, and monitors. By integrating patient-reported outcomes, clinical observations, and lab data into one platform, Med!fy accelerates the path from pharmaceutical innovation to market, ensuring treatments reach patients faster and with greater reliability.`,
+        },
+        {
+          type: "image",
+          src: "/media/medify/medify-login-desktop.png",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Goal
+           The goal of Med!fy is to revolutionize clinical trial efficiency by eliminating data silos, reducing manual work, and enabling real-time decision-making. The platform brings together every aspect of trial management into a single digital environment, empowering clinicians with live visibility over patient progress while providing patients with an intuitive, mobile-first experience that simplifies participation. Through intelligent automation, streamlined data integration, and meaningful incentives, Med!fy aims to make clinical research more connected, efficient, and human-centered - turning complexity into clarity for all stakeholders in the trial process.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/medify/medify-login.png",
+            "/media/medify/medify-calendar.png",
+            "/media/medify/medify-primary-doctor.png",
+          ],
+        },
+        {
+          type: "text",
+          content: `## Beyond Pre-Accelerator
+          My journey in the Med!fy startup started with the participation in the Beyond Pre-Accelerator program where I was the only developer on the team and had the task of building a full-stack demo application from scratch, so we had our goals outlined and an MVP to improve on. Our team won 1st Place at Beyond Pre-Accelerator and we were awarded a €5000 grant, entry to IBM Sofia Accelerator, and the opportunity to pitch to the investors of Bulgarian Angels Club.`,
+        },
+        {
+          type: "image",
+          src: "/media/medify/medify-notifications.png",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Application
+           The Med!fy application unifies doctors, monitors, and patients into one streamlined ecosystem.
+
+          #### For Clinicians
+          Med!fy provides a real-time monitoring dashboard that consolidates every patient’s data - medication adherence, symptoms, and assessments - in one view. Automated alerts highlight concerning inputs, enabling doctors to respond proactively rather than waiting for scheduled reviews. Enrollment is simplified through one-time codes, and integrated document management ensures compliance and easy access to records, consent forms, and medical protocols.
+
+          #### For Patients
+          The platform offers a mobile application designed for effortless daily tracking. Users can record medication intake, symptoms, and quality-of-life metrics in just a few taps. The intuitive interface, built-in calendar, and instant feedback transform data logging into a seamless part of daily life. The gamified reward system motivates adherence by converting consistent participation into vouchers and gift cards from partner retailers.
+
+          #### For Monitors
+          Med!fy enables continuous, remote supervision across multiple trials. A unified dashboard displays live metrics, identifies data gaps or protocol deviations, and offers one-tap reporting for anomalies. This shift from reactive to preventive monitoring ensures early detection of issues and faster corrective action.
+
+          With automated cross-verification, version control, and audit trails, Med!fy maintains regulatory compliance while drastically reducing administrative workload. The result is a platform that increases productivity, accuracy, and engagement across all levels of clinical research.`,
+        },
+        {
+          type: "gallery",
+          images: [
+            "/media/medify/medify-yes-no.png",
+            "/media/medify/medify-range.png",
+            "/media/medify/medify-multiple.png",
+          ],
+        },
+        {
+          type: "text",
+          content: `## The Present
+           Med!fy is currently in the late MVP testing phase, with the core functionalities - unified data integration, clinician dashboard, patient tracking app, and reward system - fully implemented and undergoing optimization. The platform has been validated through participation in the JA Bulgaria Startup Program (Beyond Pre-accelerator), where the business model and technical framework were refined. The system now includes localization features, offline functionality, and full compliance with regional regulations in Eastern Europe, positioning it for scalable deployment.`,
+        },
+        {
+          type: "image",
+          src: "/media/medify/medify-trials.png",
+          orientation: "landscape",
+        },
+        {
+          type: "text",
+          content: `## The Future
+           Looking ahead, Med!fy aims to expand its capabilities into a comprehensive digital research infrastructure that connects stakeholders across global clinical trials. The roadmap includes advanced analytics powered by AI, predictive modeling for patient outcomes, and integration with leading clinical research platforms and electronic data capture systems.
+
+           #### The Long-term Vision
+           The long-term vision is a fully unified, intelligent research ecosystem where every clinical trial, regardless of region or scale, operates with real-time insight, complete data accuracy, and a seamless participant experience. Through this, Med!fy seeks to bring life-changing treatments to market faster, safer, and more efficiently than ever before.`,
+        },
+        {
+          type: "image",
+          src: "/media/medify/medify-patients.png",
+          orientation: "landscape",
+        },
+      ],
+    },
+    gradientScheme: {
+      from: "rgb(245, 245, 245)",
+      via: "rgba(0, 176, 176, 0.3)",
+      to: "rgba(50, 35, 120, 0.4)",
+    },
+    gridImages: [
+      "/media/medify/medify-calendar.png",
+      "/media/medify/medify-multiple.png",
+    ],
   },
   {
     id: "spotlight",
@@ -308,7 +444,7 @@ export const projects: Project[] = [
       year: "2024",
       category: "Progressive Web App",
       technologies: ["Next.js", "SCSS", "Spotify API"],
-      role: "Frontend Developer",
+      role: "Front-end Developer",
     },
     hero: {
       type: "image",
@@ -353,6 +489,10 @@ export const projects: Project[] = [
       via: "rgba(177, 151, 250, 0.3)",
       to: "rgba(109, 57, 255, 0.3)",
     },
+    gridImages: [
+      "/media/spotlight/spotlight-home.png",
+      "/media/spotlight/spotlight-artists.png",
+    ],
   },
   {
     id: "vetemore",
@@ -393,24 +533,11 @@ export const projects: Project[] = [
       via: "rgba(238, 232, 170, 0.4)",
       to: "rgba(218, 165, 32, 0.4)",
     },
+    gridImages: [
+      "/media/vetemore/vetemore-hero.png",
+      "/media/vetemore/vetemore-hero.png",
+    ],
   },
-  // {
-  //   id: "medify"
-  //   slug: "medify",
-  //   title: "Medify",
-  //   description:
-  //     "Medify is a platform that.",
-  //   metadata: {
-  //     year: "2024",
-  //     category: "E-commerce Platform",
-  //     technologies: ["Next.js", "Tailwind CSS", "Supabase"],
-  //     role: "Frontend Developer",
-  //   },
-  //   hero: {
-  //     image: "/media/medify.png",
-  //     orientation: "portrait",
-  //   },
-  // },
 ];
 
 export const slides: Project[] = projects;
