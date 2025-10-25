@@ -56,12 +56,12 @@ export default function About() {
           )}
         >
           <span className="pointer-coarse:inline! pointer-fine:hidden!">
-            Tap
+            Tap on
           </span>
           <span className="pointer-coarse:hidden! pointer-fine:inline!">
-            Hover
+            Hover over
           </span>{" "}
-          on the paragraphs
+          the paragraphs
         </p>
       </ElementReveal>
 
