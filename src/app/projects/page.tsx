@@ -1,80 +1,48 @@
 "use client";
 
-import { useEffect, useRef, useMemo, useState } from "react";
+import { useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
-import ScrollSmoother from "gsap/ScrollSmoother";
 import { getAllProjects, type Project } from "@/data/slides";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-
-interface PlaceholderItem {
-  id: string;
-  isPlaceholder: true;
-}
-
-type GridItem = Project | PlaceholderItem;
+gsap.registerPlugin(ScrollTrigger);
 
 export default function Projects() {
   const gridRef = useRef<HTMLDivElement | null>(null);
   const isInitializedRef = useRef(false);
   const baseProjects = getAllProjects();
-  const [isMobile, setIsMobile] = useState<boolean | null>(null);
 
-  const projects = useMemo((): GridItem[] => {
-    const placeholder = (id: string): PlaceholderItem => ({
-      id,
-      isPlaceholder: true,
+  const projects = useMemo((): Project[] => {
+    // Create additional project entries for grid images
+    const allProjects: Project[] = [];
+
+    baseProjects.forEach((project) => {
+      // Add the main project
+      allProjects.push(project);
+
+      // Add additional images as separate project entries
+      project.gridImages.forEach((image, index) => {
+        allProjects.push({
+          ...project,
+          id: `${project.id}-img${index + 1}`,
+          slug: `${project.slug}`,
+          title: project.title,
+          subtitle: project.subtitle,
+          slideImage: image,
+          description: project.description,
+          metadata: project.metadata,
+          hero: project.hero,
+          content: project.content,
+          gradientScheme: project.gradientScheme,
+          gridImages: project.gridImages,
+        });
+      });
     });
 
-    // Fixed pattern for the projects
-    const gridItems: GridItem[] = [
-      baseProjects[1], // Detaile
-      placeholder("placeholder-1"),
-      baseProjects[4], // Vetemòre
-      placeholder("placeholder-2"),
-      placeholder("placeholder-3"),
-      placeholder("placeholder-4"),
-      baseProjects[0], // Dutch Design Week 2025
-      placeholder("placeholder-5"),
-      placeholder("placeholder-6"),
-      baseProjects[2], // Spotlight
-      placeholder("placeholder-7"),
-      placeholder("placeholder-8"),
-      placeholder("placeholder-9"),
-      baseProjects[3], // Strijp-S AI Assistant
-      placeholder("placeholder-10"),
-    ];
-
-    if (isMobile === true) {
-      return baseProjects;
-    }
-
-    const multipleGridItems = [gridItems[gridItems.length - 1], ...gridItems];
-    return Array.from({ length: 5 }, (_, cycleIndex) =>
-      multipleGridItems.map((item, itemIndex) => ({
-        ...item,
-        id: `${item.id}-cycle-${cycleIndex}-${itemIndex}`,
-      })),
-    ).flat();
-  }, [baseProjects, isMobile]);
-
-  useEffect(() => {
-    const checkIsMobile = () => {
-      const mobile = window.innerWidth < 640;
-      setIsMobile(mobile);
-    };
-
-    checkIsMobile();
-
-    window.addEventListener("resize", checkIsMobile);
-
-    return () => {
-      window.removeEventListener("resize", checkIsMobile);
-    };
-  }, []);
+    return allProjects;
+  }, [baseProjects]);
 
   useEffect(() => {
     const grid = gridRef.current;
@@ -83,35 +51,129 @@ export default function Projects() {
     // Reset initialization to allow re-initialization when dependencies change
     isInitializedRef.current = false;
 
-    let smoother: ReturnType<typeof ScrollSmoother.create> | null = null;
     let currentColumnCount: number | null = null;
 
-    const isMobileDevice = () => window.innerWidth < 640;
-
-    const baseLag = 0.1;
-    const lagIncrement = 0.2;
-
-    // Initial appear animation
+    // Initial appear animation - smooth card stacking from center to grid positions
     const animateInitialAppear = () => {
-      const items = grid.querySelectorAll(".grid__item");
+      const items = grid.querySelectorAll(
+        ".grid__item",
+      ) as NodeListOf<HTMLElement>;
+      if (items.length === 0) return;
+
+      const screenCenterX = window.innerWidth / 2;
+      const screenCenterY = window.innerHeight / 2;
+
+      // Ensure grid container maintains its layout during animation
+      gsap.set(grid, {
+        position: "relative",
+        overflow: "visible",
+      });
+
+      // Force scrollbar to appear and reserve its space
+      const html = document.documentElement;
+      gsap.set(html, {
+        overflowY: "scroll",
+      });
+
+      gsap.set(items, { opacity: 0 });
+
+      const originalPositions: Array<{
+        x: number;
+        y: number;
+        left: number;
+        top: number;
+      }> = [];
+      items.forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        originalPositions.push({
+          x: rect.left + rect.width / 2,
+          y: rect.top + rect.height / 2,
+          left: rect.left,
+          top: rect.top,
+        });
+      });
+
+      const textElements = grid.querySelectorAll("h2, h3, h4");
+      gsap.set(textElements, { opacity: 0 });
+
+      // Get actual grid item dimensions to match exactly
+      const firstItem = items[0];
+      const itemRect = firstItem.getBoundingClientRect();
+      const actualWidth = itemRect.width;
+      const actualHeight = itemRect.height;
+
+      // Store dimensions for consistent sizing throughout animation
+      const itemDimensions = { width: actualWidth, height: actualHeight };
+
+      // Set all items to have consistent dimensions from the start
+      gsap.set(items, {
+        width: itemDimensions.width,
+        height: itemDimensions.height,
+      });
 
       gsap.set(items, {
-        opacity: 0,
-        scale: 0.9,
-        y: 50,
+        position: "fixed",
+        left: screenCenterX,
+        top: screenCenterY,
+        xPercent: -50,
+        yPercent: -50,
+        width: itemDimensions.width,
+        height: itemDimensions.height,
+        scale: 0,
+        opacity: 1,
+        zIndex: (index) => index + 1,
+        rotation: 0,
+        transformOrigin: "center center",
       });
 
       gsap.to(items, {
-        opacity: 1,
         scale: 1,
-        y: 0,
-        duration: 1.5,
+        duration: 0.9,
         ease: "power4.out",
-        stagger: {
-          amount: 1.2,
-          from: "start",
-        },
+        stagger: 0.08,
         delay: 0.2,
+        onComplete: () => {
+          setTimeout(() => {
+            items.forEach((item, index) => {
+              const targetX = originalPositions[index].x - screenCenterX;
+              const targetY = originalPositions[index].y - screenCenterY;
+
+              gsap.to(item, {
+                x: targetX,
+                y: targetY,
+                scale: 1,
+                rotation: 0,
+                duration: 0.9,
+                ease: "power3.inOut",
+                delay: index * 0.02,
+                onComplete: () => {
+                  // Show text when item reaches final position
+                  const itemText = item.querySelectorAll("h2, h3, h4");
+                  gsap.to(itemText, {
+                    opacity: 1,
+                    duration: 0.4,
+                    ease: "power2.out",
+                    delay: 0.05,
+                  });
+
+                  gsap.delayedCall(0.5, () => {
+                    gsap.set(item, {
+                      position: "static",
+                      left: "auto",
+                      top: "auto",
+                      x: 0,
+                      y: 0,
+                      xPercent: 0,
+                      yPercent: 0,
+                      width: itemDimensions.width,
+                      height: itemDimensions.height,
+                    });
+                  });
+                },
+              });
+            });
+          }, 100);
+        },
       });
     };
 
@@ -121,28 +183,11 @@ export default function Projects() {
       return templateColumns.split(" ").filter(Boolean).length;
     };
 
-    const applyDirectLagEffects = (
-      scrollSmoother: ReturnType<typeof ScrollSmoother.create>,
-    ) => {
-      const items = grid.querySelectorAll(".grid__item");
-      const colCount = getColumnCount();
-
-      items.forEach((item, index) => {
-        const columnIndex = index % colCount;
-        const lag = baseLag + columnIndex * lagIncrement;
-
-        try {
-          scrollSmoother.effects(item as HTMLElement, {
-            speed: 1,
-            lag: lag,
-          });
-        } catch {}
-      });
-    };
-
     const init = () => {
       try {
-        const items = grid.querySelectorAll(".grid__item");
+        const items = grid.querySelectorAll(
+          ".grid__item",
+        ) as NodeListOf<HTMLElement>;
         if (items.length === 0) return;
 
         const colCount = getColumnCount();
@@ -150,35 +195,12 @@ export default function Projects() {
 
         currentColumnCount = colCount;
 
-        if (smoother) {
-          smoother.kill();
-          smoother = null;
-        }
-
-        // Only apply smooth scroll effects on non-mobile devices
-        if (!isMobileDevice()) {
-          smoother = ScrollSmoother.create({
-            wrapper: "#smooth-wrapper",
-            content: "#smooth-content",
-            smooth: 1.2,
-            effects: true,
-            normalizeScroll: true,
-          });
-
-          applyDirectLagEffects(smoother);
-        }
-
-        // Small delay to ensure DOM is fully ready
         requestAnimationFrame(() => {
           animateInitialAppear();
         });
         isInitializedRef.current = true;
       } catch {
         isInitializedRef.current = false;
-        if (smoother) {
-          smoother.kill();
-          smoother = null;
-        }
       }
     };
 
@@ -196,7 +218,6 @@ export default function Projects() {
       }, 100);
     };
 
-    // Small delay to ensure the component has fully rendered
     const initTimer = setTimeout(init, 50);
     window.addEventListener("resize", handleResize);
 
@@ -205,71 +226,66 @@ export default function Projects() {
       clearTimeout(resizeTimeout);
       window.removeEventListener("resize", handleResize);
 
-      if (smoother) {
-        try {
-          smoother.kill();
-        } catch {}
-        smoother = null;
-      }
-
       isInitializedRef.current = false;
     };
-  }, [isMobile, projects]);
+  }, [projects]);
 
+  // ! FIX MOBILE GRID
   return (
-    <main id="smooth-wrapper">
-      <div id="smooth-content">
-        <div className="px-4 pt-30 lg:px-16">
-          <div
-            ref={gridRef}
-            className="xs:gap-x-16 grid grid-cols-2 gap-x-10 gap-y-16 sm:grid-cols-4 md:gap-x-10 lg:grid-cols-5 lg:gap-x-16 xl:gap-x-32"
-          >
-            {projects.map((item) => {
-              // Placeholder items (hidden on mobile)
-              if ("isPlaceholder" in item && item.isPlaceholder) {
-                return (
-                  <div
-                    key={item.id}
-                    className="grid__item hidden flex-col gap-y-2 opacity-0 sm:flex"
-                  >
-                    <figure className="relative aspect-[1.1/1.51] bg-zinc-400/20 blur-sm" />
-                    <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
-                      ???
-                    </h4>
-                  </div>
-                );
-              }
+    <main className="pb-4">
+      <div className="flex items-center justify-center px-4 pt-30 md:px-8 xl:px-16">
+        <div
+          ref={gridRef}
+          className="grid w-full grid-cols-2 gap-x-12 gap-y-12 sm:grid-cols-3 sm:gap-x-16 sm:gap-y-14 md:grid-cols-4 md:gap-x-24 md:gap-y-16 lg:grid-cols-5 lg:gap-x-12 lg:gap-y-18 xl:gap-x-36 xl:gap-y-24"
+        >
+          {projects.map((project) => {
+            const isAdditionalImage = project.id.includes("-img");
 
-              const project = item as Project;
-              return (
-                <Link
-                  key={project.id}
-                  href={`/${project.slug}`}
-                  target="_top"
-                  className="grid__item group group flex flex-col gap-y-2 opacity-0"
-                >
-                  <figure className="relative aspect-[1.1/1.51] transition-transform duration-500 group-hover:scale-95">
-                    <Image
-                      src={project.slideImage}
-                      alt={project.title}
-                      fill
-                      className="object-cover"
-                      sizes="(max-width: 768px) 50vw, (max-width: 1024px) 33vw, 20vw"
-                      priority={projects.indexOf(project) < 15}
-                    />
-                  </figure>
-                  <div className="flex flex-col gap-y-0.5 transition-transform duration-500 group-hover:-translate-y-2 group-hover:scale-95">
-                    <h2 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
-                      {project.title}
-                    </h2>
-                    <h3 className="font-plus-jakarta-sans text-[10px] font-medium tracking-[-0.01em] text-zinc-500">
-                      {project.subtitle}
-                    </h3>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+            return (
+              <Link
+                key={project.id}
+                href={`/${project.slug}`}
+                target="_top"
+                className="grid__item group flex max-w-[35vw] flex-col gap-y-2 opacity-0"
+              >
+                <figure className="relative aspect-[1.1/1.51] max-w-[35vw] overflow-hidden bg-[#e4e4e4] transition-transform duration-700 ease-[cubic-bezier(0.22,_-0.01,_0.13,_0.99)] group-hover:scale-95">
+                  <Image
+                    src={project.slideImage}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-700 ease-[cubic-bezier(0.22,_-0.01,_0.13,_0.99)] group-hover:scale-[1.0526]"
+                    sizes="(max-width: 640px) 40vw, (max-width: 768px) 30vw, (max-width: 1024px) 25vw, (max-width: 1280px) 20vw, 16vw"
+                    // priority={projects.indexOf(project) < 15}
+                  />
+                </figure>
+
+                <div className="group flex flex-col">
+                  <h4 className="font-plus-jakarta-sans mb-1 text-[11px] font-semibold tracking-[-0.01em] transition-transform duration-700 ease-[cubic-bezier(0.22,_-0.01,_0.13,_0.99)] group-hover:-translate-y-2 group-hover:scale-95">
+                    {(() => {
+                      const baseProjectId = project.id.split("-img")[0];
+                      const projectIndex =
+                        baseProjects.findIndex((p) => p.id === baseProjectId) +
+                        1;
+                      return projectIndex < 10
+                        ? `0${projectIndex}`
+                        : `${projectIndex}`;
+                    })()}
+                    .
+                  </h4>
+                  {!isAdditionalImage && (
+                    <>
+                      <h2 className="font-plus-jakarta-sans text-[11px] font-semibold tracking-[-0.01em] transition-transform delay-30 duration-700 ease-[cubic-bezier(0.22,_-0.01,_0.13,_0.99)] group-hover:-translate-y-2 group-hover:scale-95">
+                        {project.title}
+                      </h2>
+                      <h3 className="font-plus-jakarta-sans text-[9px] font-medium tracking-[-0.01em] text-zinc-500 transition-transform delay-30 duration-700 ease-[cubic-bezier(0.22,_-0.01,_0.13,_0.99)] group-hover:-translate-y-2 group-hover:scale-95">
+                        {project.subtitle}
+                      </h3>
+                    </>
+                  )}
+                </div>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </main>
