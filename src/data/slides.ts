@@ -33,7 +33,7 @@ interface Project {
     blocks: ContentBlock[];
   };
   gradientScheme: GradientScheme;
-  gridImages: [image1: string, image2: string];
+  gridImages: string[];
 }
 
 export const projects: Project[] = [
@@ -142,7 +142,7 @@ export const projects: Project[] = [
       via: "rgba(251, 146, 60, 0.3)",
       to: "rgba(236, 72, 153, 0.3)",
     },
-    gridImages: ["/media/ddw/ddw-merged.png", "/media/ddw/ddw-3d-split.png"],
+    gridImages: ["/media/ddw/ddw-merged.png", "/media/ddw/ddw-grid-image.png"],
   },
   {
     id: "strijp-s-ai",
@@ -220,10 +220,7 @@ export const projects: Project[] = [
       via: "rgba(186, 230, 253, 0.5)",
       to: "rgba(147, 197, 253, 0.5)",
     },
-    gridImages: [
-      "/media/strijp-s-ai/strijp-s-ai-mobile.png",
-      "/media/strijp-s-ai/strijp-s-ai-feedback.png",
-    ],
+    gridImages: ["/media/strijp-s-ai/strijp-s-ai-mobile.png"],
   },
   {
     id: "detaile",
@@ -315,8 +312,8 @@ export const projects: Project[] = [
       to: "rgb(214, 211, 209)",
     },
     gridImages: [
-      "/media/detaile/detaile-daily-detaile.png",
-      "/media/detaile/detaile-favorites.png",
+      "/media/detaile/detaile-grid-image.png",
+      "/media/detaile/detaile-grid-image-2.png",
     ],
   },
   {
@@ -428,8 +425,8 @@ export const projects: Project[] = [
       to: "rgba(50, 35, 120, 0.4)",
     },
     gridImages: [
-      "/media/medify/medify-calendar.png",
-      "/media/medify/medify-multiple.png",
+      "/media/medify/medify-image-grid.png",
+      "/media/medify/medify-image-grid-2.png",
     ],
   },
   {
@@ -489,10 +486,7 @@ export const projects: Project[] = [
       via: "rgba(177, 151, 250, 0.3)",
       to: "rgba(109, 57, 255, 0.3)",
     },
-    gridImages: [
-      "/media/spotlight/spotlight-home.png",
-      "/media/spotlight/spotlight-artists.png",
-    ],
+    gridImages: ["/media/spotlight/spotlight-artists.png"],
   },
   {
     id: "vetemore",
@@ -533,10 +527,7 @@ export const projects: Project[] = [
       via: "rgba(238, 232, 170, 0.4)",
       to: "rgba(218, 165, 32, 0.4)",
     },
-    gridImages: [
-      "/media/vetemore/vetemore-hero.png",
-      "/media/vetemore/vetemore-hero.png",
-    ],
+    gridImages: ["/media/vetemore/vetemore-image-grid.png"],
   },
 ];
 
