@@ -167,8 +167,8 @@ export default function ElementReveal({
           elementRef.current = [];
           lines.current = [];
           mediaElements.current = [];
-        } catch (error) {
-          console.warn("Error cleaning up ElementReveal:", error);
+        } catch {
+          // Silently handle cleanup errors
         }
       };
     },

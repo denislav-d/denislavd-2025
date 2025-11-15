@@ -4,8 +4,6 @@ import PrevNextProjectButton from "@/components/PrevNextProjectButton";
 import ProjectHero from "@/components/project/ProjectHero";
 import ProjectSection from "@/components/project/ProjectSection";
 
-// ! TODO Add fullscreen video option
-
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
 }

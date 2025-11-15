@@ -1,6 +1,5 @@
 import { MDXRemote, MDXRemoteProps } from "next-mdx-remote-client/rsc";
 import Link from "next/link";
-// import Image from "next/image";
 import rehypeSanitize from "rehype-sanitize";
 
 type MDXComponents = MDXRemoteProps["components"];
@@ -59,7 +58,6 @@ export default function RendererMDX({
         {children}
       </ol>
     ),
-    // Improve this
     li: ({ children }) => <li className="mb-1 w-fit">{children}</li>,
     code: ({ children }) => (
       <code className="rounded bg-zinc-100 px-1 py-0.5 font-mono text-xs">
@@ -67,16 +65,6 @@ export default function RendererMDX({
       </code>
     ),
     strong: ({ children }) => <strong className="font-bold">{children}</strong>,
-    // img: ({ src, alt, ...props }) => (
-    //   <Image
-    //     src={src || ""}
-    //     alt={alt || ""}
-    //     width={800}
-    //     height={600}
-    //     className="w-full max-w-prose sm:px-2"
-    //     {...props}
-    //   />
-    // ),
   };
 
   return (

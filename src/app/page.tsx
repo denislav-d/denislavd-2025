@@ -19,10 +19,8 @@ import { slides } from "@/data/slides";
 import { getInterpolatedGradient } from "@/utils/gradients";
 import { useGradient } from "@/providers/GradientContext";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 
-gsap.registerPlugin(SplitText);
 gsap.registerPlugin(CustomEase);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
 CustomEase.create("text", "0.5, 1, 0.89, 1");
@@ -173,10 +171,6 @@ export default function Slider() {
           (loadedTexture) => {
             loadedTexture.needsUpdate = true;
           },
-          undefined,
-          (error) => {
-            console.error("Error loading texture for", slide.slideImage, error);
-          },
         );
 
         texture.minFilter = LinearFilter;
@@ -186,14 +180,6 @@ export default function Slider() {
     };
 
     const textures = loadTextures();
-
-    // function preloadAllTextures() {
-    //   textures.forEach((texture) => {
-    //     texture.needsUpdate = true;
-    //   });
-    // }
-
-    // preloadAllTextures();
 
     const geometry = new PlaneGeometry(
       dimensions.width,
