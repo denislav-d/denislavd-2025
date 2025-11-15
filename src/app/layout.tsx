@@ -4,6 +4,7 @@ import "./globals.css";
 import Navigation from "@/components/Navigation";
 import SmoothScroll from "@/components/SmoothScroll";
 import { GradientProvider } from "@/providers/GradientContext";
+import { Analytics } from "@vercel/analytics/next";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -15,13 +16,33 @@ const ebGaramond = EB_Garamond({
   variable: "--font-eb-garamond",
 });
 
-// ? IDEA: dynamic metadata?
-// ? Page Transitions: were successfully implemented, however the navigation animation becomes useless (and I really like it), so keep them out for now
-
 export const metadata: Metadata = {
   title: "Denislav Dimitrov",
+  description:
+    "A visionary in search of meaningful innovation. Design-Driven Developer interested in digital identity, fashion, design principles, art, & artificial intelligence.",
   icons: {
     icon: "/favicon.ico",
+  },
+  openGraph: {
+    title: "Denislav Dimitrov",
+    description:
+      "A visionary in search of meaningful innovation. Design-Driven Developer interested in digital identity, fashion, design principles, art, & artificial intelligence.",
+    type: "website",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "Denislav Dimitrov - Design-Driven Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Denislav Dimitrov",
+    description:
+      "A visionary in search of meaningful innovation. Design-Driven Developer interested in digital identity, fashion, design principles, art, & artificial intelligence.",
+    images: ["/api/og"],
   },
 };
 
@@ -39,6 +60,8 @@ export default function RootLayout({
           <Navigation />
           <SmoothScroll>{children}</SmoothScroll>
         </GradientProvider>
+
+        <Analytics />
       </body>
     </html>
   );
