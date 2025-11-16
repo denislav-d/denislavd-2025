@@ -67,7 +67,7 @@ export const projects: Project[] = [
           type: "gallery",
           images: [
             "/media/ddw/ddw-human-zoo-poster.png",
-            "/media/ddw/ddw-demo.mov",
+            "/media/ddw/ddw-demo.webm",
             "/media/ddw/ddw-mutual-imprint-poster.png",
           ],
         },
@@ -113,7 +113,7 @@ export const projects: Project[] = [
         },
         {
           type: "video",
-          src: "/media/ddw/ddw-blob-demo.mp4",
+          src: "/media/ddw/ddw-blob-demo.webm",
         },
         {
           type: "text",
@@ -133,7 +133,7 @@ export const projects: Project[] = [
         },
         {
           type: "video",
-          src: "/media/ddw/ddw-innovations-demo.mp4",
+          src: "/media/ddw/ddw-innovations-demo.webm",
         },
       ],
     },
@@ -168,7 +168,7 @@ export const projects: Project[] = [
     },
     hero: {
       type: "video",
-      src: "/media/strijp-s-ai/strijp-s-ai-video.mov",
+      src: "/media/strijp-s-ai/strijp-s-ai-video.webm",
       orientation: "landscape",
     },
     content: {
