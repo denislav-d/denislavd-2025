@@ -15,6 +15,7 @@ import {
 import { vertexShaderSlider, fragmentShaderSlider } from "@/utils/shaders";
 import Minimap from "@/components/Minimap";
 import Link from "next/link";
+import Image from "next/image";
 import { slides } from "@/data/slides";
 import { getInterpolatedGradient } from "@/utils/gradients";
 import { useGradient } from "@/providers/GradientContext";
@@ -761,6 +762,20 @@ export default function Slider() {
 
   return (
     <div className="slider-page bg-light relative grid max-h-dvh min-h-dvh w-screen overflow-hidden">
+      {/* Preload first few slider images for instant loading */}
+      <div className="hidden">
+        {slides.slice(0, 5).map((slide) => (
+          <Image
+            key={slide.id}
+            src={slide.slideImage}
+            alt={slide.title}
+            width={500}
+            height={700}
+            priority
+            loading="eager"
+          />
+        ))}
+      </div>
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{

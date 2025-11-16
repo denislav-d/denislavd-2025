@@ -33,7 +33,7 @@ export default function ElementReveal({
     () => {
       if (!containerRef.current) return;
 
-      // Wait for fonts to load before initializing SplitText
+      // Wait for fonts and media to load before initializing SplitText
       const initSplitText = async () => {
         if (document.fonts && document.fonts.ready) {
           await document.fonts.ready;
@@ -51,9 +51,37 @@ export default function ElementReveal({
           elements = [containerRef.current];
         }
 
+        // Collect media loading promises
+        const mediaLoadPromises: Promise<void>[] = [];
+
         elements.forEach((element) => {
           if (isMediaElement(element as Element)) {
             mediaElements.current.push(element as HTMLElement);
+
+            // Wait for images to load
+            if (element && element.tagName === "IMG") {
+              const img = element as HTMLImageElement;
+              if (!img.complete) {
+                const loadPromise = new Promise<void>((resolve) => {
+                  img.onload = () => resolve();
+                  img.onerror = () => resolve();
+                });
+                mediaLoadPromises.push(loadPromise);
+              }
+            }
+
+            // Wait for videos to be ready
+            if (element && element.tagName === "VIDEO") {
+              const video = element as HTMLVideoElement;
+              if (video.readyState < 3) {
+                const loadPromise = new Promise<void>((resolve) => {
+                  video.onloadeddata = () => resolve();
+                  video.onerror = () => resolve();
+                  setTimeout(() => resolve(), 3000);
+                });
+                mediaLoadPromises.push(loadPromise);
+              }
+            }
           } else {
             elementRef.current?.push(element as HTMLDivElement);
 
@@ -89,6 +117,9 @@ export default function ElementReveal({
             lines.current.push(...(split.lines as HTMLDivElement[]));
           }
         });
+
+        // Wait for all media to load
+        await Promise.all(mediaLoadPromises);
 
         if (lines.current.length > 0) {
           gsap.set(lines.current, {
