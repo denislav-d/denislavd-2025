@@ -32,7 +32,8 @@ export default function ProjectSection(block: ContentBlock) {
                 src={block.src || ""}
                 alt={block.alt || ""}
                 className="w-full object-cover"
-                sizes="(max-width: 768px) 100vw, 640px"
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 640px, 640px"
+                loading="lazy"
               />
             </ElementReveal>
           </figure>
@@ -50,6 +51,7 @@ export default function ProjectSection(block: ContentBlock) {
               loop
               muted
               playsInline
+              preload="metadata"
             />
           </ElementReveal>
         </section>
@@ -73,6 +75,7 @@ export default function ProjectSection(block: ContentBlock) {
                       loop
                       muted
                       playsInline
+                      preload="metadata"
                     />
                   ) : (
                     <Image
@@ -80,7 +83,8 @@ export default function ProjectSection(block: ContentBlock) {
                       src={media}
                       alt={block.alt || ""}
                       className="object-cover"
-                      sizes="(max-width: 768px) 100vw, 640px"
+                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 33vw, 320px"
+                      loading="lazy"
                     />
                   )}
                 </ElementReveal>

@@ -46,8 +46,9 @@ export default function ProjectHero({
               src={hero.src}
               alt={hero.alt || title}
               className="w-full object-cover"
-              sizes="(max-width: 768px) 100vw, 640px"
+              sizes="(max-width: 640px) 100vw, (max-width: 768px) 640px, 640px"
               priority
+              quality={90}
             />
           ) : (
             <video
@@ -57,6 +58,7 @@ export default function ProjectHero({
               loop
               muted
               playsInline
+              preload="auto"
             />
           )}
         </ElementReveal>

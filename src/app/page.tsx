@@ -165,7 +165,7 @@ export default function Slider() {
     const loadTextures = () => {
       const textureLoader = new TextureLoader();
 
-      return slides.map((slide) => {
+      return slides.map((slide, index) => {
         const texture = textureLoader.load(
           slide.slideImage,
           (loadedTexture) => {
@@ -175,6 +175,10 @@ export default function Slider() {
 
         texture.minFilter = LinearFilter;
         texture.magFilter = LinearFilter;
+
+        // Generate mipmaps only for first few textures to improve initial load
+        texture.generateMipmaps = index < 3;
+
         return texture;
       });
     };
