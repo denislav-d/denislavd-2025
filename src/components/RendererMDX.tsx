@@ -20,7 +20,7 @@ export default function RendererMDX({
       </h1>
     ),
     h2: ({ children }) => (
-      <h2 className="font-eb-garamond pt-16 pb-4 text-center text-3xl tracking-[-0.02em] max-sm:px-4">
+      <h2 className="font-eb-garamond pt-16 pb-4 text-center text-2xl tracking-[-0.02em] max-sm:px-4 sm:text-3xl">
         {children}
       </h2>
     ),

@@ -25,7 +25,7 @@ export default function ProjectHero({
         </ElementReveal>
 
         <ElementReveal animateOnScroll>
-          <h3 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em] lg:text-sm">
+          <h3 className="font-plus-jakarta-sans text-sm font-semibold tracking-[-0.01em]">
             {description}
           </h3>
         </ElementReveal>
