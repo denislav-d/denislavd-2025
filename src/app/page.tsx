@@ -25,21 +25,6 @@ gsap.registerPlugin(CustomEase);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
 CustomEase.create("text", "0.5, 1, 0.89, 1");
 
-// Preload critical images using native browser APIs
-function preloadImages(imagePaths: string[]): Promise<void[]> {
-  return Promise.all(
-    imagePaths.map(
-      (path) =>
-        new Promise<void>((resolve) => {
-          const img = new window.Image();
-          img.onload = () => resolve();
-          img.onerror = () => resolve();
-          img.src = path;
-        }),
-    ),
-  );
-}
-
 export default function Slider() {
   const { isGradientEnabled } = useGradient();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -85,12 +70,6 @@ export default function Slider() {
     const projectTitle = projectTitleRef.current;
     const projectSubtitle = projectSubtitleRef.current;
     const projectLink = projectLinkRef.current;
-
-    // Preload first 5 slider images for instant loading
-    const criticalImages = slides.slice(0, 5).map((slide) => slide.slideImage);
-    preloadImages(criticalImages).then(() => {
-      // Images are now cached, Three.js TextureLoader will load them instantly
-    });
 
     // Initialize project title, subtitle and link
     projectTitle.textContent = slides[0].title;
@@ -183,6 +162,8 @@ export default function Slider() {
 
     const dimensions = calculatePlaneDimensions();
 
+    let isFirstFrameRendered = false;
+
     const loadTextures = () => {
       const textureLoader = new TextureLoader();
 
@@ -191,14 +172,26 @@ export default function Slider() {
           slide.slideImage,
           (loadedTexture) => {
             loadedTexture.needsUpdate = true;
+
+            // When first texture loads, trigger first frame render
+            if (index === 0 && !isFirstFrameRendered) {
+              // First texture is ready, next animation frame will render it
+              requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                  // First WebGL frame with texture is now rendered
+                  isFirstFrameRendered = true;
+                  startRevealAnimation();
+                });
+              });
+            }
           },
         );
 
         texture.minFilter = LinearFilter;
         texture.magFilter = LinearFilter;
 
-        // Generate mipmaps only for first few textures to improve initial load
-        texture.generateMipmaps = index < 3;
+        // Only generate mipmaps for first texture
+        texture.generateMipmaps = index === 0;
 
         return texture;
       });
@@ -228,6 +221,7 @@ export default function Slider() {
     const plane = new Mesh(geometry, material);
     scene.add(plane);
 
+    // Set initial state (hidden)
     gsap.set(container, {
       clipPath: "polygon(40% 35%, 60% 35%, 60% 65%, 40% 65%)",
       scale: 0.4,
@@ -237,32 +231,35 @@ export default function Slider() {
       y: 100,
     });
 
-    gsap.to(container, {
-      scale: 1,
-      clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
-      duration: 1.4,
-      ease: "hop",
-      onComplete: () => {
-        isAppearAnimationFinishedRef.current = true;
-        setIsAppearAnimationFinished(true);
-      },
-    });
+    // Function to start reveal animation after first frame is rendered
+    function startRevealAnimation() {
+      gsap.to(container, {
+        scale: 1,
+        clipPath: "polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)",
+        duration: 1.4,
+        ease: "hop",
+        onComplete: () => {
+          isAppearAnimationFinishedRef.current = true;
+          setIsAppearAnimationFinished(true);
+        },
+      });
 
-    gsap.to(projectTitle, {
-      y: 0,
-      duration: 1,
-      delay: 0.8,
-      ease: "text",
-      opacity: 1,
-    });
+      gsap.to(projectTitle, {
+        y: 0,
+        duration: 1,
+        delay: 0.8,
+        ease: "text",
+        opacity: 1,
+      });
 
-    gsap.to(projectSubtitle, {
-      y: 0,
-      duration: 1,
-      delay: 0.9,
-      opacity: 1,
-      ease: "text",
-    });
+      gsap.to(projectSubtitle, {
+        y: 0,
+        duration: 1,
+        delay: 0.9,
+        opacity: 1,
+        ease: "text",
+      });
+    }
 
     function determineTextureIndices(position: number) {
       const totalImages = slides.length;
