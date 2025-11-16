@@ -15,7 +15,6 @@ import {
 import { vertexShaderSlider, fragmentShaderSlider } from "@/utils/shaders";
 import Minimap from "@/components/Minimap";
 import Link from "next/link";
-import Image from "next/image";
 import { slides } from "@/data/slides";
 import { getInterpolatedGradient } from "@/utils/gradients";
 import { useGradient } from "@/providers/GradientContext";
@@ -25,6 +24,21 @@ import { CustomEase } from "gsap/CustomEase";
 gsap.registerPlugin(CustomEase);
 CustomEase.create("hop", "0.9, 0, 0.1, 1");
 CustomEase.create("text", "0.5, 1, 0.89, 1");
+
+// Preload critical images using native browser APIs
+function preloadImages(imagePaths: string[]): Promise<void[]> {
+  return Promise.all(
+    imagePaths.map(
+      (path) =>
+        new Promise<void>((resolve) => {
+          const img = new window.Image();
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+          img.src = path;
+        }),
+    ),
+  );
+}
 
 export default function Slider() {
   const { isGradientEnabled } = useGradient();
@@ -71,6 +85,12 @@ export default function Slider() {
     const projectTitle = projectTitleRef.current;
     const projectSubtitle = projectSubtitleRef.current;
     const projectLink = projectLinkRef.current;
+
+    // Preload first 5 slider images for instant loading
+    const criticalImages = slides.slice(0, 5).map((slide) => slide.slideImage);
+    preloadImages(criticalImages).then(() => {
+      // Images are now cached, Three.js TextureLoader will load them instantly
+    });
 
     // Initialize project title, subtitle and link
     projectTitle.textContent = slides[0].title;
@@ -762,20 +782,6 @@ export default function Slider() {
 
   return (
     <div className="slider-page bg-light relative grid max-h-dvh min-h-dvh w-screen overflow-hidden">
-      {/* Preload first few slider images for instant loading */}
-      <div className="hidden">
-        {slides.slice(0, 5).map((slide) => (
-          <Image
-            key={slide.id}
-            src={slide.slideImage}
-            alt={slide.title}
-            width={500}
-            height={700}
-            priority
-            loading="eager"
-          />
-        ))}
-      </div>
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{
