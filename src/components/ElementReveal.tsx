@@ -103,6 +103,9 @@ export default function ElementReveal({
           });
         }
 
+        // Restore container opacity after setup
+        gsap.set(containerRef.current, { opacity: 1 });
+
         const textAnimationProps = {
           y: "0%",
           duration: 1.2,
@@ -167,9 +170,7 @@ export default function ElementReveal({
           elementRef.current = [];
           lines.current = [];
           mediaElements.current = [];
-        } catch {
-          // Silently handle cleanup errors
-        }
+        } catch {}
       };
     },
     {
@@ -181,14 +182,17 @@ export default function ElementReveal({
   if (React.Children.count(children) === 1 && React.isValidElement(children)) {
     const existingClassName =
       (children.props as { className?: string })?.className || "";
+    const existingStyle =
+      (children.props as { style?: React.CSSProperties })?.style || {};
     return React.cloneElement(children, {
       ref: containerRef,
       className: existingClassName.trim(),
+      style: { ...existingStyle, opacity: 0 },
     } as React.RefAttributes<HTMLDivElement>);
   }
 
   return (
-    <div ref={containerRef} data-reveal-wrapper="true">
+    <div ref={containerRef} data-reveal-wrapper="true" style={{ opacity: 0 }}>
       {children}
     </div>
   );
