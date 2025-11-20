@@ -5,6 +5,7 @@ import Navigation from "@/components/Navigation";
 import SmoothScroll from "@/components/SmoothScroll";
 import { GradientProvider } from "@/providers/GradientContext";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -62,6 +63,7 @@ export default function RootLayout({
         </GradientProvider>
 
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
