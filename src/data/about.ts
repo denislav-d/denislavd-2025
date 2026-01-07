@@ -49,5 +49,5 @@ export const aboutData: AboutData = {
       { label: "Secondary", hex: "#71717b" },
     ],
   },
-  footerText: "© 2025 Denislav Dimitrov",
+  footerText: "© 2026 Denislav Dimitrov",
 };
