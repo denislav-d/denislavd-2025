@@ -153,7 +153,7 @@ export default function ImageTrail({
             width={240}
             height={320}
             priority={false}
-            className="image-item h-[160px] w-[120px] object-cover"
+            className="image-item h-40 w-[120px] object-cover"
           />
         ))}
       </div>

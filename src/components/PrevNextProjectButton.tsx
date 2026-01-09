@@ -1,5 +1,6 @@
 import { Project } from "@/data/slides";
 import { cn } from "@/utils/utils";
+import Link from "next/link";
 
 export default function PrevNextProjectButton({
   project,
@@ -18,12 +19,12 @@ export default function PrevNextProjectButton({
       <h4 className="font-plus-jakarta-sans text-xs font-semibold tracking-[-0.01em]">
         {side === "prev" ? "Previous" : "Next"} Project
       </h4>
-      <a
+      <Link
         href={`/${project.slug}`}
         className="font-eb-garamond text-xl tracking-[-0.01em] transition-colors hover:text-zinc-600"
       >
         {project.title}
-      </a>
+      </Link>
     </button>
   );
 }

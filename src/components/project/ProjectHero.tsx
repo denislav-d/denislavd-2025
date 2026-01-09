@@ -36,7 +36,7 @@ export default function ProjectHero({
       <figure
         className={cn(
           "relative select-none",
-          hero.orientation === "portrait" ? "aspect-[0.8/1]" : "aspect-[16/10]",
+          hero.orientation === "portrait" ? "aspect-[0.8/1]" : "aspect-16/10",
         )}
       >
         <ElementReveal animateOnScroll>
