@@ -24,7 +24,7 @@ export default function About() {
             Design-Driven Developer interested in ideas surrounding digital
             identity, fashion, design principles, art, & artificial
             intelligence. Currently pursuing a university degree in the
-            Netherlands and working at Gewest13.
+            Netherlands and doing an internship at Build in Amsterdam.
           </p>
         </ElementReveal>
 
