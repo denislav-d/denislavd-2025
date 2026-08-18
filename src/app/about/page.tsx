@@ -23,8 +23,17 @@ export default function About() {
             <span className="pl-8 sm:pl-16">Denislav Dimitrov</span> is a
             Design-Driven Developer interested in ideas surrounding digital
             identity, fashion, design principles, art, & artificial
-            intelligence. Currently pursuing a university degree in the
-            Netherlands and doing an internship at Build in Amsterdam.
+            intelligence. Currently working as a Developer at{" "}
+            <span className="whitespace-nowrap">
+              <Link
+                href="https://www.buildinamsterdam.com/"
+                target="_blank"
+                className="relative inline-block after:pointer-events-none after:absolute after:right-0 after:bottom-[0.02em] after:left-0 after:h-px after:bg-current after:opacity-100 after:transition-opacity after:duration-300 after:ease-out after:content-[''] hover:after:opacity-0"
+              >
+                Build in Amsterdam
+              </Link>
+              .
+            </span>
           </p>
         </ElementReveal>
 
