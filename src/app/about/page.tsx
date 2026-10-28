@@ -20,9 +20,10 @@ export const metadata: Metadata = {
     url: "/about",
     images: [
       {
-        url: "/api/og",
+        url: "/opengraph-image.png",
         width: 1200,
         height: 630,
+        type: "image/png",
         alt: "Denislav Dimitrov - Design-Driven Developer",
       },
     ],
@@ -31,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "About - Denislav Dimitrov",
     description,
-    images: ["/api/og"],
+    images: ["/opengraph-image.png"],
   },
 };
 
