@@ -779,6 +779,25 @@ export default function Slider() {
 
   return (
     <div className="slider-page bg-light relative grid max-h-dvh min-h-dvh w-screen overflow-hidden">
+      <div className="sr-only">
+        <h1>Denislav Dimitrov</h1>
+        <p>
+          Denislav Dimitrov is a design-driven developer interested in digital
+          identity, fashion, design principles, art, and artificial
+          intelligence.
+        </p>
+        <nav aria-label="Projects">
+          <ul>
+            {slides.map((slide) => (
+              <li key={slide.slug}>
+                <Link href={`/${slide.slug}`} tabIndex={-1}>
+                  {slide.title}: {slide.subtitle}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
       <div
         className="absolute inset-0 transition-opacity duration-1000 ease-out"
         style={{

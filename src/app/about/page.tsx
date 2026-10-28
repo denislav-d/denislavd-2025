@@ -1,8 +1,39 @@
+import type { Metadata } from "next";
 import ElementReveal from "@/components/ElementReveal";
 import ImageTrail from "@/components/ImageTrail";
 import Link from "next/link";
 import { aboutData } from "@/data/about";
 import { cn } from "@/utils/utils";
+
+const description =
+  "Denislav Dimitrov is a design-driven developer interested in digital identity, fashion, design principles, art, and artificial intelligence. Currently a developer at Build in Amsterdam.";
+
+export const metadata: Metadata = {
+  title: "About",
+  description,
+  alternates: {
+    canonical: "/about",
+  },
+  openGraph: {
+    title: "About - Denislav Dimitrov",
+    description,
+    url: "/about",
+    images: [
+      {
+        url: "/api/og",
+        width: 1200,
+        height: 630,
+        alt: "Denislav Dimitrov - Design-Driven Developer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "About - Denislav Dimitrov",
+    description,
+    images: ["/api/og"],
+  },
+};
 
 export default function About() {
   return (

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getProjectBySlug, getAllProjects } from "@/data/slides";
 import PrevNextProjectButton from "@/components/PrevNextProjectButton";
@@ -6,6 +7,51 @@ import ProjectSection from "@/components/project/ProjectSection";
 
 interface ProjectPageProps {
   params: Promise<{ slug: string }>;
+}
+
+export function generateStaticParams() {
+  return getAllProjects().map((project) => ({ slug: project.slug }));
+}
+
+export async function generateMetadata({
+  params,
+}: ProjectPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const project = getProjectBySlug(slug);
+
+  if (!project) {
+    return { title: "Not found" };
+  }
+
+  const title = `${project.title} - Denislav Dimitrov`;
+  const image =
+    project.hero.type === "image" ? project.hero.src : project.slideImage;
+
+  return {
+    title: project.title,
+    description: project.description,
+    alternates: {
+      canonical: `/${slug}`,
+    },
+    openGraph: {
+      title,
+      description: project.description,
+      url: `/${slug}`,
+      type: "article",
+      images: [
+        {
+          url: image,
+          alt: project.hero.alt || project.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description: project.description,
+      images: [image],
+    },
+  };
 }
 
 export default async function Project({ params }: ProjectPageProps) {

@@ -151,10 +151,11 @@ export default function Minimap({
           >
             <button
               data-dash
+              tabIndex={-1}
               aria-label="Slider minimap dash"
               onClick={() => handleProjectClick(dash.slideIndex)}
               className={cn(
-                "bg-dark h-[1px] w-3 origin-left cursor-default transition-all duration-500 ease-out",
+                "bg-dark h-px w-3 origin-left cursor-default transition-all duration-500 ease-out",
                 getDashScale(dash.index),
                 getDashOpacity(dash.index),
                 "group-hover:bg-dark/80",
