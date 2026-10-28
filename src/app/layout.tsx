@@ -30,7 +30,7 @@ const personJsonLd = {
   name: siteName,
   url: siteUrl,
   jobTitle: "Design-Driven Developer",
-  image: `${siteUrl}/api/og`,
+  image: `${siteUrl}/opengraph-image.png`,
   sameAs,
 };
 
@@ -53,20 +53,11 @@ export const metadata: Metadata = {
     type: "website",
     url: siteUrl,
     siteName,
-    images: [
-      {
-        url: "/api/og",
-        width: 1200,
-        height: 630,
-        alt: "Denislav Dimitrov - Design-Driven Developer",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/api/og"],
   },
 };
 
